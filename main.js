@@ -22,7 +22,7 @@ $.extend(tiddlyweb, {
 	loadTiddlers: function(container, filter, callback) {
 		var uri = "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers" +
-			filter ? encodeURIComponent(filter) : "";
+			(filter ? encodeURIComponent(filter) : "");
 		callback = callback || console.log; // XXX: DEBUG
 		this.loadData(uri, callback);
 	},
