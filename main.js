@@ -3,6 +3,7 @@
  *
  * TODO:
  * * error handling in callbacks
+ * * Container class to simplify { type: type, name: name }
  */
 
 var tiddlyweb = {
@@ -14,12 +15,14 @@ var tiddlyweb = {
 $.extend(tiddlyweb, {
 	/*
 	 * container has members type ("bag" or "recipe") and name
+	 * filter is an optional filter string (e.g. "select=tag:foo;limit=5")
 	 * callback is passed data, status and error (if applicable)
 	 * see jQuery.ajax for details
 	 */
-	loadTiddlers: function(container, callback) {
+	loadTiddlers: function(container, filter, callback) {
 		var uri = "/" + container.type + "s/" +
-			encodeURIComponent(container.name) + "/tiddlers"
+			encodeURIComponent(container.name) + "/tiddlers" +
+			filter ? encodeURIComponent(filter) : "";
 		callback = callback || console.log; // XXX: DEBUG
 		this.loadData(uri, callback);
 	},
