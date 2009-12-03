@@ -117,7 +117,7 @@ $.extend(tiddlyweb, {
 		localAjax({
 			url: this.host + uri,
 			type: "PUT",
-			dataType: "json",
+			contentType: "application/json",
 			data: $.toJSON(data),
 			complete: callback
 		});
