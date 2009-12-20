@@ -1,0 +1,7 @@
+JavaScript library for TiddlyWeb clients
+
+(chrjs is for client-side HTTP requests from JavaScript)
+
+Dependencies:
+* jQuery (http://jquery.com)
+* jquery-json (http://code.google.com/p/jquery-json/)
