@@ -4,6 +4,7 @@
  * TODO:
  * * error handling in callbacks
  * * Container class to simplify { type: type, name: name }
+ * * Recipe and Bag classes to simplify save* calls
  */
 
 var tiddlyweb = {
@@ -83,22 +84,23 @@ $.extend(tiddlyweb, {
 	 * policy is an object with members write, create, delete, manage and accept,
 	 * each an array of users/roles
 	 */
-	saveBag: function(name, policy) {
+	saveBag: function(name, policy, callback) {
 		var uri = "/bags/" + encodeURIComponent(name);
 		var data = {
 			policy: policy
 		};
-		this.saveData(uri, data, console.log);
+		callback = callback || console.log; // XXX: DEBUG
+		this.saveData(uri, data, callback);
 	},
 
 	/*
-	 * bags is an array of bag names
-	 * filters currently unsupported
+	 * recipe is an object with members desc, policy and recipe
+	 * recipe.recipe is an array of bag-filter string pairs
 	 */
-	saveRecipe: function(name, bags) {
+	saveRecipe: function(name, recipe, callback) {
 		var uri = "/recipes/" + encodeURIComponent(name);
-		var data = {};
-		this.saveData(uri, data, console.log);
+		callback = callback || console.log; // XXX: DEBUG
+		this.saveData(uri, recipe, callback);
 	},
 
 	// generic utility methods
