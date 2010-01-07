@@ -1,5 +1,6 @@
 /*
  * TiddlyWeb adaptor
+ * v0.2.0
  *
  * TODO:
  * * error handling in callbacks
@@ -7,13 +8,15 @@
  * * Recipe and Bag classes to simplify save* calls
  */
 
-var tiddlyweb = {
-	host: "" // defaults to current domain -- XXX: lacks server_prefix -- TODO: document; expects no trailing slash
-};
+// constructor
+// host defaults to the current domain (without server_prefix)
+function TiddlyWeb(host) {
+	this.host = host ? host.replace(/\/$/, "") : "";
+}
 
 (function($) {
 
-$.extend(tiddlyweb, {
+$.extend(TiddlyWeb.prototype, {
 	/*
 	 * container has members type ("bag" or "recipe") and name
 	 * filter is an optional filter string (e.g. "select=tag:foo;limit=5")
@@ -35,7 +38,7 @@ $.extend(tiddlyweb, {
 	loadTiddler: function(title, container, callback) {
 		var uri = "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers/" +
-			encodeURIComponent(title)
+			encodeURIComponent(title);
 		callback = callback || console.log; // XXX: DEBUG
 		this.loadData(uri, callback);
 	},
