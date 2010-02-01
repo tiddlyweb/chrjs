@@ -1,11 +1,10 @@
 /*
  * TiddlyWeb adaptor
- * v0.2.1
+ * v0.3.0
  *
  * TODO:
  * * error handling in callbacks
- * * Container class to simplify { type: type, name: name }
- * * Recipe and Bag classes to simplify save* calls
+ * * use Crockford's Prototypal Inheritance to avoid "new" operator
  */
 
 // constructor
@@ -14,19 +13,30 @@ function TiddlyWeb(host) {
 	this.host = host ? host.replace(/\/$/, "") : "";
 }
 
+$.extend(TiddlyWeb, {
+	Bag: function(name) {
+		this.type = "bag"; // XXX: redundant!?
+		this.name = name;
+	},
+	Recipe: function(name) {
+		this.type = "recipe"; // XXX: redundant!?
+		this.name = name;
+	}
+});
+
 (function($) {
 
 $.extend(TiddlyWeb.prototype, {
 	/*
-	 * container has members type ("bag" or "recipe") and name
-	 * filter is an optional filter string (e.g. "select=tag:foo;limit=5")
+	 * container is an instance of either Bag or Recipe
+	 * container.filter is an optional filter string ("select=tag:foo;limit=5")
 	 * callback is passed data, status and error (if applicable)
 	 * see jQuery.ajax for details
 	 */
-	loadTiddlers: function(container, filter, callback) {
+	listTiddlers: function(container, callback) {
 		var uri = "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers" +
-			(filter ? "?" + encodeURIComponent(filter) : "");
+			(container.filter ? "?" + encodeURIComponent(container.filter) : "");
 		this.loadData(uri, callback);
 	},
 
@@ -34,7 +44,7 @@ $.extend(TiddlyWeb.prototype, {
 	 * callback is passed data, status and error (if applicable)
 	 * see jQuery.ajax for details
 	 */
-	loadTiddler: function(title, container, callback) {
+	getTiddler: function(title, container, callback) {
 		var uri = "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers/" +
 			encodeURIComponent(title);
