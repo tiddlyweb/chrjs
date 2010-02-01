@@ -23,19 +23,24 @@ TiddlyWeb = {
 		revisions: "{prefix}/{type}s/{name}/tiddlers/{title}/revisions",
 		revision : "{prefix}/{type}s/{name}/tiddlers/{title}/revisions/{id}",
 		search   : "{prefix}/search?q={query}"
-	}
+	} // XXX: s/prefix/host/ (includes server_prefix)?
 };
 
 var Resource = function() {}; // XXX: should not be private?
 $.extend(Resource.prototype, {
 	get: function() {
 		localAjax({
-			url: this.route() + uri,
+			url: this.route(),
 			type: "GET",
 			dataType: "json",
-			success: callback,
-			error: callback
+			success: this.processData,
+			error: this.handleError
 		});
+	},
+	processData: function(data, status, xhr) {},
+	handleError: function(xhr, error, exc) {},
+	route: function() {
+		return supplant(TiddlyWeb.routes[this.type], this);
 	}
 });
 
