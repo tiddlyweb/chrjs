@@ -44,6 +44,37 @@ $.extend(Resource.prototype, {
 	}
 });
 
+var Container = function(type) { // XXX: excessive abstraction!?
+	this.type = type;
+};
+Container.prototype = new Resource();
+$.extend(Container.prototype, {
+	listTiddlers: function() {
+		// XXX: hacky!?
+		var _container = function() {};
+		_container.type = this.type + "s";
+		_container.get(); // TODO: adjusted callbacks
+	}
+});
+
+/*
+ * Bag
+ */
+
+TiddlyWeb.Bag = function(name) {
+	this.name = name;
+};
+TiddlyWeb.Bag.prototype = new Container("bag");
+
+/*
+ * Recipe
+ */
+
+TiddlyWeb.Recipe = function(name) {
+	this.name = name;
+};
+TiddlyWeb.Recipe.prototype = new Container("recipe");
+
 /*
  * Tiddler
  */
