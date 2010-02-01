@@ -27,7 +27,6 @@ $.extend(TiddlyWeb.prototype, {
 		var uri = "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers" +
 			(filter ? "?" + encodeURIComponent(filter) : "");
-		callback = callback || console.log; // XXX: DEBUG
 		this.loadData(uri, callback);
 	},
 
@@ -39,7 +38,6 @@ $.extend(TiddlyWeb.prototype, {
 		var uri = "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers/" +
 			encodeURIComponent(title);
-		callback = callback || console.log; // XXX: DEBUG
 		this.loadData(uri, callback);
 	},
 
@@ -49,7 +47,6 @@ $.extend(TiddlyWeb.prototype, {
 	 */
 	loadBags: function(callback) {
 		var uri = "/bags";
-		callback = callback || console.log; // XXX: DEBUG
 		this.loadData(uri, callback);
 	},
 
@@ -59,7 +56,6 @@ $.extend(TiddlyWeb.prototype, {
 	 */
 	loadBag: function(name, callback) {
 		var uri = "/bags/" + encodeURIComponent(name);
-		callback = callback || console.log; // XXX: DEBUG
 		this.loadData(uri, callback);
 	},
 
@@ -69,7 +65,6 @@ $.extend(TiddlyWeb.prototype, {
 	 */
 	loadRecipes: function(callback) {
 		var uri = "/recipes";
-		callback = callback || console.log; // XXX: DEBUG
 		this.loadData(uri, callback);
 	},
 
@@ -79,7 +74,6 @@ $.extend(TiddlyWeb.prototype, {
 	 */
 	loadRecipe: function(name, callback) {
 		var uri = "/recipes/" + encodeURIComponent(name);
-		callback = callback || console.log; // XXX: DEBUG
 		this.loadData(uri, callback);
 	},
 
@@ -92,7 +86,6 @@ $.extend(TiddlyWeb.prototype, {
 		var data = {
 			policy: policy
 		};
-		callback = callback || console.log; // XXX: DEBUG
 		this.saveData(uri, data, callback);
 	},
 
@@ -102,7 +95,6 @@ $.extend(TiddlyWeb.prototype, {
 	 */
 	saveRecipe: function(name, recipe, callback) {
 		var uri = "/recipes/" + encodeURIComponent(name);
-		callback = callback || console.log; // XXX: DEBUG
 		this.saveData(uri, recipe, callback);
 	},
 
