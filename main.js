@@ -26,7 +26,7 @@ TiddlyWeb = {
 	} // XXX: s/prefix/host/ (includes server_prefix)?
 };
 
-var Resource = function() {}; // XXX: should not be private?
+var Resource = function() {};
 $.extend(Resource.prototype, {
 	get: function() {
 		localAjax({
@@ -44,16 +44,19 @@ $.extend(Resource.prototype, {
 	}
 });
 
-var Container = function(type) { // XXX: excessive abstraction!?
+var Container = function(type) {
 	this.type = type;
 };
 Container.prototype = new Resource();
 $.extend(Container.prototype, {
 	listTiddlers: function() {
 		// XXX: hacky!?
-		var _container = function() {};
-		_container.type = this.type + "s";
-		_container.get(); // TODO: adjusted callbacks
+		var collection = new Container(this.type); // XXX: not a container!?
+		collection.container = this; // XXX: unused
+		collection.route = function() {
+			return supplant(TiddlyWeb.routes[this.type + "s"], this);
+		};
+		collection.get(); // TODO: adjusted callbacks
 	}
 });
 
