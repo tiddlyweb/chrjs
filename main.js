@@ -1,6 +1,6 @@
 /*
  * TiddlyWeb adaptor
- * v0.2.0
+ * v0.2.1
  *
  * TODO:
  * * error handling in callbacks
@@ -26,7 +26,7 @@ $.extend(TiddlyWeb.prototype, {
 	loadTiddlers: function(container, filter, callback) {
 		var uri = "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers" +
-			(filter ? encodeURIComponent(filter) : "");
+			(filter ? "?" + encodeURIComponent(filter) : "");
 		callback = callback || console.log; // XXX: DEBUG
 		this.loadData(uri, callback);
 	},
