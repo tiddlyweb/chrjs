@@ -12,10 +12,12 @@
 (function($) {
 
 TiddlyWeb = {
-	routes: { // placeholders "type" and "name" refer to container (bag/recipe)
+	routes: { // placeholders "type" & "name" refer to the respective bag/recipe
 		root      : "{prefix}/",
-		containers: "{prefix}/{type}",
-		container : "{prefix}/{type}/{name}",
+		bags      : "{prefix}/bags"
+		bag       : "{prefix}/bags/{name}"
+		recipes   : "{prefix}/recipes"
+		recipe    : "{prefix}/recipes/{name}"
 		tiddlers  : "{prefix}/{type}s/{name}/tiddlers",
 		tiddler   : "{prefix}/{type}s/{name}/tiddlers/{title}",
 		revisions : "{prefix}/{type}s/{name}/tiddlers/{title}/revisions",
