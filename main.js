@@ -13,21 +13,21 @@
 
 TiddlyWeb = {
 	routes: { // placeholders "type" & "name" refer to the respective bag/recipe
-		root      : "{prefix}/",
-		bags      : "{prefix}/bags"
-		bag       : "{prefix}/bags/{name}"
-		recipes   : "{prefix}/recipes"
-		recipe    : "{prefix}/recipes/{name}"
-		tiddlers  : "{prefix}/{type}s/{name}/tiddlers",
-		tiddler   : "{prefix}/{type}s/{name}/tiddlers/{title}",
-		revisions : "{prefix}/{type}s/{name}/tiddlers/{title}/revisions",
-		revision  : "{prefix}/{type}s/{name}/tiddlers/{title}/revisions/{id}",
-		search    : "{prefix}/search?q={query}"
+		root     : "{prefix}/",
+		bags     : "{prefix}/bags",
+		bag      : "{prefix}/bags/{name}",
+		recipes  : "{prefix}/recipes",
+		recipe   : "{prefix}/recipes/{name}",
+		tiddlers : "{prefix}/{type}s/{name}/tiddlers",
+		tiddler  : "{prefix}/{type}s/{name}/tiddlers/{title}",
+		revisions: "{prefix}/{type}s/{name}/tiddlers/{title}/revisions",
+		revision : "{prefix}/{type}s/{name}/tiddlers/{title}/revisions/{id}",
+		search   : "{prefix}/search?q={query}"
 	}
 };
 
 var Resource = function() {}; // XXX: should not be private?
-$.extend(Resource.prototype. {
+$.extend(Resource.prototype, {
 	get: function() {
 		localAjax({
 			url: this.route() + uri,
@@ -46,7 +46,11 @@ $.extend(Resource.prototype. {
 TiddlyWeb.Tiddler = function(title) {
 	this.title = title;
 };
-TiddlyWeb.Tiddler.prototype = Resource;
+TiddlyWeb.Tiddler.prototype = new Resource();
+
+/*
+ * utilities
+ */
 
 // adapted from Crockford (http://javascript.crockford.com/remedial.html)
 var supplant = function(str, obj) {
