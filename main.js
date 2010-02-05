@@ -37,12 +37,12 @@ $.extend(Resource.prototype, {
 			url: this.route(),
 			type: "GET",
 			dataType: "json",
-			success: this.processData,
-			error: this.handleError
+			success: this.process,
+			error: this.recover
 		});
 	},
-	processData: function(data, status, xhr) {},
-	handleError: function(xhr, error, exc) {},
+	process: function(data, status, xhr) {},
+	recover: function(xhr, error, exc) {}, // XXX: bad name?
 	route: function() {
 		return supplant(TiddlyWeb.routes[this.type], this);
 	}
