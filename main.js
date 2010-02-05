@@ -32,7 +32,10 @@ var Resource = function(type) {
 	this.type = type;
 };
 $.extend(Resource.prototype, {
-	get: function(callback, errorCallback) { // TODO: document callback arguments (cf. jQuery.ajax)
+	// retrieves tiddler from server
+	// callback arguments are as defined by jQuery.ajax:
+	// data, status, xhr (success) and  xhr, error, exc (error)
+	get: function(callback, errorCallback) {
 		localAjax({
 			url: this.route(),
 			type: "GET",
