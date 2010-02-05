@@ -32,17 +32,15 @@ var Resource = function(type) {
 	this.type = type;
 };
 $.extend(Resource.prototype, {
-	get: function(callback) { // XXX: callback currently unused
+	get: function(callback, errorCallback) { // TODO: document callback arguments (cf. jQuery.ajax)
 		localAjax({
 			url: this.route(),
 			type: "GET",
 			dataType: "json",
-			success: this.process,
-			error: this.recover
+			success: callback,
+			error: errorCallback
 		});
 	},
-	process: function(data, status, xhr) {},
-	recover: function(xhr, error, exc) {}, // XXX: bad name?
 	route: function() {
 		return supplant(TiddlyWeb.routes[this.type], this);
 	}
@@ -72,9 +70,9 @@ $.extend(Container.prototype, {
 // container (optional) is an instance of either Bag or Recipe
 // host (optional) is the URI of the originating TiddlyWeb instance
 TiddlyWeb.Tiddler = function(title, container, host) {
-	this.title = title; // TODO: assert string?
-	this.bag = container.type == "bag" ? container.name : null;
-	this.recipe = container.type == "recipe" ? container.name : null;
+	this.title = title;
+	this.bag = container && container.type == "bag" ? container.name : null;
+	this.recipe = container && container.type == "recipe" ? container.name : null;
 	this.host = host !== undefined ? host : null; // TODO: should be part of Resource -- TODO: optionally add protocol, strip trailing slash
 };
 TiddlyWeb.Tiddler.prototype = new Resource("tiddler");
