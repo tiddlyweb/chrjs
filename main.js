@@ -12,18 +12,20 @@
 (function($) {
 
 TiddlyWeb = {
-	routes: { // placeholders "type" & "name" refer to the respective bag/recipe
-		root     : "{prefix}/",
-		bags     : "{prefix}/bags",
-		bag      : "{prefix}/bags/{name}",
-		recipes  : "{prefix}/recipes",
-		recipe   : "{prefix}/recipes/{name}",
-		tiddlers : "{prefix}/{type}s/{name}/tiddlers",
-		tiddler  : "{prefix}/{type}s/{name}/tiddlers/{title}",
-		revisions: "{prefix}/{type}s/{name}/tiddlers/{title}/revisions",
-		revision : "{prefix}/{type}s/{name}/tiddlers/{title}/revisions/{id}",
-		search   : "{prefix}/search?q={query}"
-	} // XXX: s/prefix/host/ (includes server_prefix)?
+	routes: {
+		// host is URL of TiddlyWeb instance (including server_prefix)
+		// placeholders "type" & "name" refer to the respective bag/recipe
+		root     : "{host}/",
+		bags     : "{host}/bags",
+		bag      : "{host}/bags/{name}",
+		recipes  : "{host}/recipes",
+		recipe   : "{host}/recipes/{name}",
+		tiddlers : "{host}/{type}s/{name}/tiddlers",
+		tiddler  : "{host}/{type}s/{name}/tiddlers/{title}",
+		revisions: "{host}/{type}s/{name}/tiddlers/{title}/revisions",
+		revision : "{host}/{type}s/{name}/tiddlers/{title}/revisions/{id}",
+		search   : "{host}/search?q={query}"
+	}
 };
 
 var Resource = function() {};
