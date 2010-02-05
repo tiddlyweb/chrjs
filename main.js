@@ -32,7 +32,7 @@ var Resource = function(type) {
 	this.type = type;
 };
 $.extend(Resource.prototype, {
-	get: function() {
+	get: function(callback) { // XXX: callback currently unused
 		localAjax({
 			url: this.route(),
 			type: "GET",
@@ -73,15 +73,15 @@ $.extend(Container.prototype, {
 // host (optional) is the URI of the originating TiddlyWeb instance
 TiddlyWeb.Tiddler = function(title, container, host) {
 	this.title = title; // TODO: assert string?
-	this.bag = container.type == "bag" ? container.name || null;
-	this.recipe = container.type == "recipe" ? container.name || null;
+	this.bag = container.type == "bag" ? container.name : null;
+	this.recipe = container.type == "recipe" ? container.name : null;
 	this.host = host !== undefined ? host : null; // TODO: should be part of Resource -- TODO: optionally add protocol, strip trailing slash
 };
 TiddlyWeb.Tiddler.prototype = new Resource("tiddler");
 $.extend(TiddlyWeb.Tiddler.prototype, {
 	route: function() {
 		var params = $.extend({}, this, {
-			type: this.bag ? "bag" : (this.recipe : "recipe" : null),
+			type: this.bag ? "bag" : (this.recipe ? "recipe" : null),
 			name: this.bag || this.recipe
 		});
 		return supplant(TiddlyWeb.routes[this.type], params);
