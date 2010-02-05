@@ -28,7 +28,9 @@ TiddlyWeb = {
 	}
 };
 
-var Resource = function() {};
+var Resource = function(type) {
+	this.type = type;
+};
 $.extend(Resource.prototype, {
 	get: function() {
 		localAjax({
@@ -47,11 +49,11 @@ $.extend(Resource.prototype, {
 });
 
 var Container = function(type) {
-	this.type = type;
+	this.type = type; // XXX: redundant (cf. Resource)
 };
 Container.prototype = new Resource();
 $.extend(Container.prototype, {
-	listTiddlers: function() {
+	listTiddlers: function() { // XXX: should be collection object with its own get method
 		// XXX: hacky!?
 		var collection = new Container(this.type); // XXX: not a container!?
 		collection.container = this; // XXX: unused
@@ -75,7 +77,16 @@ TiddlyWeb.Tiddler = function(title, container, host) {
 	this.recipe = container.type == "recipe" ? container.name || null;
 	this.host = host !== undefined ? host : null; // TODO: should be part of Resource -- TODO: optionally add protocol, strip trailing slash
 };
-TiddlyWeb.Tiddler.prototype = new Resource();
+TiddlyWeb.Tiddler.prototype = new Resource("tiddler");
+$.extend(TiddlyWeb.Tiddler.prototype, {
+	route: function() {
+		var params = $.extend({}, this, {
+			type: this.bag ? "bag" : (this.recipe : "recipe" : null),
+			name: this.bag || this.recipe
+		});
+		return supplant(TiddlyWeb.routes[this.type], params);
+	}
+});
 
 /*
  * Bag
