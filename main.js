@@ -61,6 +61,20 @@ $.extend(Container.prototype, {
 });
 
 /*
+ * Tiddler
+ */
+
+// title is the name of the tiddler
+// bag (optional) is the name of the containing bag
+// host (optional) is the URI of the originating TiddlyWeb instance
+TiddlyWeb.Tiddler = function(title, bag, host) {
+	this.title = title;
+	this.bag = bag || null;
+	this.host = host !== undefined ? host : null;
+};
+TiddlyWeb.Tiddler.prototype = new Resource();
+
+/*
  * Bag
  */
 
@@ -77,20 +91,6 @@ TiddlyWeb.Recipe = function(name) {
 	this.name = name;
 };
 TiddlyWeb.Recipe.prototype = new Container("recipe");
-
-/*
- * Tiddler
- */
-
-// title is the name of the tiddler
-// bag (optional) is the name of the containing bag
-// host (optional) is the URI of the originating TiddlyWeb instance
-TiddlyWeb.Tiddler = function(title, bag, host) {
-	this.title = title;
-	this.bag = bag || null;
-	this.host = host !== undefined ? host : null;
-};
-TiddlyWeb.Tiddler.prototype = new Resource();
 
 /*
  * utilities
