@@ -67,12 +67,13 @@ $.extend(Container.prototype, {
  */
 
 // title is the name of the tiddler
-// bag (optional) is the name of the containing bag
+// container (optional) is an instance of either Bag or Recipe
 // host (optional) is the URI of the originating TiddlyWeb instance
-TiddlyWeb.Tiddler = function(title, bag, host) {
-	this.title = title;
-	this.bag = bag || null;
-	this.host = host !== undefined ? host : null;
+TiddlyWeb.Tiddler = function(title, container, host) {
+	this.title = title; // TODO: assert string?
+	this.bag = container.type == "bag" ? container.name || null;
+	this.recipe = container.type == "recipe" ? container.name || null;
+	this.host = host !== undefined ? host : null; // TODO: should be part of Resource -- TODO: optionally add protocol, strip trailing slash
 };
 TiddlyWeb.Tiddler.prototype = new Resource();
 
