@@ -6,7 +6,8 @@
  * * error handling in callbacks
  * * use Crockford's Prototypal Inheritance to avoid "new" operator
  * * remove localAjax (higher-level applications' responsibility)
- * * search support
+ * * ensure all routes are supported
+ * * PUT support (in separate file?)
  */
 
 (function($) {
@@ -35,13 +36,13 @@ $.extend(Resource.prototype, {
 	// retrieves tiddler from server
 	// callback arguments are as defined by jQuery.ajax:
 	// data, status, xhr (success) and  xhr, error, exc (error)
-	get: function(callback, errorCallback) {
+	get: function(callback, errback) {
 		localAjax({
 			url: this.route(),
 			type: "GET",
 			dataType: "json",
 			success: callback,
-			error: errorCallback
+			error: errback
 		});
 	},
 	route: function() {
