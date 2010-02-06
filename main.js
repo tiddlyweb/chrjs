@@ -31,10 +31,12 @@ TiddlyWeb = {
 
 // host (optional) is the URI of the originating TiddlyWeb instance
 var Resource = function(type, host) {
-	this.type = type;
-	this.host = host !== undefined ? host.replace(/\/$/, "") : null;
-	if(this.host && this.host.indexOf("://") == -1) {
-		this.host = "http://" + this.host; // XXX: evil magic?
+	if(arguments.length) { // initialization
+		this.type = type; // XXX: somewhat redundant, as it generally corresponds to class name
+		this.host = host !== undefined ? host.replace(/\/$/, "") : null;
+		if(this.host && this.host.indexOf("://") == -1) {
+			this.host = "http://" + this.host; // XXX: evil magic?
+		}
 	}
 };
 $.extend(Resource.prototype, {
@@ -48,15 +50,18 @@ $.extend(Resource.prototype, {
 			dataType: "json",
 			success: callback,
 			error: errback
-		});
+		}); // TODO: route callbacks through onSuccess/onError methods to return corresponding instance?
 	},
 	route: function() {
 		return supplant(TiddlyWeb.routes[this.type], this);
 	}
 });
 
-var Container = function(type) {
-	this.type = type; // XXX: redundant (cf. Resource)
+var Container = function(type, name, host) {
+	if(arguments.length) { // initialization
+		Resource.apply(this, [type, host]);
+		this.name = name;
+	}
 };
 Container.prototype = new Resource();
 $.extend(Container.prototype, {
@@ -78,11 +83,12 @@ $.extend(Container.prototype, {
 // title is the name of the tiddler
 // container (optional) is an instance of either Bag or Recipe
 TiddlyWeb.Tiddler = function(title, container, host) {
+	Resource.apply(this, ["tiddler", host]); // XXX: "type" attribute ambiguous (class name vs. content type)
 	this.title = title;
 	this.bag = container && container.type == "bag" ? container.name : null;
 	this.recipe = container && container.type == "recipe" ? container.name : null;
 };
-TiddlyWeb.Tiddler.prototype = new Resource("tiddler");
+TiddlyWeb.Tiddler.prototype = new Resource();
 $.extend(TiddlyWeb.Tiddler.prototype, {
 	route: function() {
 		var params = $.extend({}, this, {
@@ -97,19 +103,19 @@ $.extend(TiddlyWeb.Tiddler.prototype, {
  * Bag
  */
 
-TiddlyWeb.Bag = function(name) {
-	this.name = name;
+TiddlyWeb.Bag = function(name, host) {
+	Container.apply(this, ["bag", name, host]);
 };
-TiddlyWeb.Bag.prototype = new Container("bag");
+TiddlyWeb.Bag.prototype = new Container();
 
 /*
  * Recipe
  */
 
-TiddlyWeb.Recipe = function(name) {
-	this.name = name;
+TiddlyWeb.Recipe = function(name, host) {
+	Container.apply(this, ["recipe", name, host]);
 };
-TiddlyWeb.Recipe.prototype = new Container("recipe");
+TiddlyWeb.Recipe.prototype = new Container();
 
 /*
  * utilities
