@@ -82,7 +82,7 @@ $.extend(Container.prototype, {
 
 // title is the name of the tiddler
 // container (optional) is an instance of either Bag or Recipe
-TiddlyWeb.Tiddler = function(title, container, host) {
+TiddlyWeb.Tiddler = function(title, host, container) {
 	Resource.apply(this, ["tiddler", host]); // XXX: "type" attribute ambiguous (class name vs. content type)
 	this.title = title;
 	this.bag = container && container.type == "bag" ? container.name : null;
