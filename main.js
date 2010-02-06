@@ -14,7 +14,7 @@
 
 TiddlyWeb = {
 	routes: {
-		// host is URL of TiddlyWeb instance (including server_prefix)
+		// host is the TiddlyWeb instance's URI (including server_prefix)
 		// placeholders "type" & "name" refer to the respective bag/recipe
 		root     : "{host}/",
 		bags     : "{host}/bags",
@@ -29,8 +29,13 @@ TiddlyWeb = {
 	}
 };
 
-var Resource = function(type) {
+// host (optional) is the URI of the originating TiddlyWeb instance
+var Resource = function(type, host) {
 	this.type = type;
+	this.host = host !== undefined ? host.replace(/\/$/, "") : null;
+	if(this.host && this.host.indexOf("://") == -1) {
+		this.host = "http://" + this.host; // XXX: evil magic?
+	}
 };
 $.extend(Resource.prototype, {
 	// retrieves tiddler from server
@@ -55,7 +60,7 @@ var Container = function(type) {
 };
 Container.prototype = new Resource();
 $.extend(Container.prototype, {
-	listTiddlers: function() { // XXX: should be collection object with its own get method
+	listTiddlers: function() { // XXX: should be tiddlers Collection instance with its own get method
 		// XXX: hacky!?
 		var collection = new Container(this.type); // XXX: not a container!?
 		collection.container = this; // XXX: unused
@@ -72,12 +77,10 @@ $.extend(Container.prototype, {
 
 // title is the name of the tiddler
 // container (optional) is an instance of either Bag or Recipe
-// host (optional) is the URI of the originating TiddlyWeb instance
 TiddlyWeb.Tiddler = function(title, container, host) {
 	this.title = title;
 	this.bag = container && container.type == "bag" ? container.name : null;
 	this.recipe = container && container.type == "recipe" ? container.name : null;
-	this.host = host !== undefined ? host : null; // TODO: should be part of Resource -- TODO: optionally add protocol, strip trailing slash
 };
 TiddlyWeb.Tiddler.prototype = new Resource("tiddler");
 $.extend(TiddlyWeb.Tiddler.prototype, {
