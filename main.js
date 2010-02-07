@@ -8,6 +8,10 @@
  * * remove localAjax (higher-level applications' responsibility)
  * * ensure all routes are supported
  * * PUT support (in separate file?)
+ * * move classes' initialization to separate init method (=> no need for .apply?)
+ * * create wrapper function for inheritance
+ * * login/challenge support? (delegate to user errback?)
+ * * documentation
  */
 
 (function($) {
@@ -61,18 +65,21 @@ var Container = function(type, name, host) {
 	if(arguments.length) { // initialization
 		Resource.apply(this, [type, host]);
 		this.name = name;
+		this.tiddlers = new Collection(this);
 	}
 };
 Container.prototype = new Resource();
-$.extend(Container.prototype, {
-	listTiddlers: function() { // XXX: should be tiddlers Collection instance with its own get method
-		// XXX: hacky!?
-		var collection = new Container(this.type); // XXX: not a container!?
-		collection.container = this; // XXX: unused
-		collection.route = function() {
-			return supplant(TiddlyWeb.routes[this.type + "s"], this);
-		};
-		collection.get(); // TODO: adjusted callbacks
+
+var Collection = function(container) { // XXX: currently only works for tiddler collections, not for bag/recipe collections (due to type attribute)
+	if(arguments.length) { // initialization
+		Resource.apply(this, [container.type, host]);
+		this.name = container.name;
+	}
+};
+Collection.prototype = new Resource();
+$.extend(Collection.prototype, {
+	route: function() {
+		return supplant(TiddlyWeb.routes.tiddlers, this);
 	}
 });
 
