@@ -1,18 +1,16 @@
-/*
- * TiddlyWeb adaptor
- * v0.5.0
- *
- * TODO:
- * * error handling in callbacks
- * * use Crockford's Prototypal Inheritance to avoid "new" operator
- * * remove localAjax (higher-level applications' responsibility)
- * * ensure all routes are supported
- * * PUT support (in separate file?)
- * * move classes' initialization to separate init method (=> no need for .apply?)
- * * create wrapper function for inheritance
- * * login/challenge support? (delegate to user errback?)
- * * documentation
- */
+// TiddlyWeb adaptor
+// v0.5.0
+//
+// TODO:
+// * error handling in callbacks
+// * use Crockford's Prototypal Inheritance to avoid "new" operator
+// * remove localAjax (higher-level applications' responsibility)
+// * ensure all routes are supported
+// * PUT support (in separate file?)
+// * move classes' initialization to separate init method (=> no need for .apply?)
+// * create wrapper function for inheritance
+// * login/challenge support? (delegate to user errback?)
+// * documentation
 
 (function($) {
 
