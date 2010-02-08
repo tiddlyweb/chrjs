@@ -63,21 +63,23 @@ var Container = function(type, name, host) {
 	if(arguments.length) { // initialization
 		Resource.apply(this, [type, host]);
 		this.name = name;
-		this.tiddlers = new Collection(this);
+		this.tiddlers = new TiddlyWeb.Collection(this.type, this.host, this);
 	}
 };
 Container.prototype = new Resource();
 
-var Collection = function(container) { // XXX: currently only works for tiddler collections, not for bag/recipe collections (due to type attribute)
+TiddlyWeb.Collection = function(type, host, container) {
 	if(arguments.length) { // initialization
-		Resource.apply(this, [container.type, host]);
-		this.name = container.name;
+		Resource.apply(this, [type, host]);
+		this.container = container || null;
 	}
 };
-Collection.prototype = new Resource();
-$.extend(Collection.prototype, {
-	route: function() {
-		return supplant(TiddlyWeb.routes.tiddlers, this);
+TiddlyWeb.Collection.prototype = new Resource();
+$.extend(TiddlyWeb.Collection.prototype, {
+	route: function() { // XXX: special-casing magic for tiddler collections
+		var route = this.container ? "tiddlers" : this.type;
+		var params = this.container ? this.container : this;
+		return supplant(TiddlyWeb.routes[route], params);
 	}
 });
 
