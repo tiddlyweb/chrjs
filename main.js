@@ -92,8 +92,10 @@ $.extend(TiddlyWeb.Collection.prototype, {
 TiddlyWeb.Tiddler = function(title, host, container) {
 	Resource.apply(this, ["tiddler", host]); // XXX: "type" attribute ambiguous (class name vs. content type)
 	this.title = title;
-	this.bag = container && container.type == "bag" ? container.name : null;
-	this.recipe = container && container.type == "recipe" ? container.name : null;
+	if(container) {
+		this.bag = container.type == "bag" ? container.name : null;
+		this.recipe = container.type == "recipe" ? container.name : null;
+	}
 };
 TiddlyWeb.Tiddler.prototype = new Resource();
 $.extend(TiddlyWeb.Tiddler.prototype, {
