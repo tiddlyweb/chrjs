@@ -89,8 +89,8 @@ $.extend(TiddlyWeb.Collection.prototype, {
 
 // title is the name of the tiddler
 // container (optional) is an instance of either Bag or Recipe
-TiddlyWeb.Tiddler = function(title, host, container) {
-	Resource.apply(this, ["tiddler", host]); // XXX: "type" attribute ambiguous (class name vs. content type)
+TiddlyWeb.Tiddler = function(title, container) { // XXX: "type" attribute ambiguous (class name vs. content type)
+	Resource.apply(this, ["tiddler"]);
 	this.title = title;
 	if(container) {
 		this.bag = container.type == "bag" ? container.name : null;
@@ -100,9 +100,11 @@ TiddlyWeb.Tiddler = function(title, host, container) {
 TiddlyWeb.Tiddler.prototype = new Resource();
 $.extend(TiddlyWeb.Tiddler.prototype, {
 	route: function() {
+		var container = this.bag || this.recipe;
 		var params = $.extend({}, this, {
+			host: container ? container.host : null,
 			type: this.bag ? "bag" : (this.recipe ? "recipe" : null),
-			name: this.bag || this.recipe
+			name: container ? container.name : null,
 		});
 		return supplant(TiddlyWeb.routes[this.type], params);
 	}
