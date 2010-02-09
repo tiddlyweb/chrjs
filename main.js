@@ -39,12 +39,18 @@ var Resource = function(type, host) {
 	}
 };
 $.extend(Resource.prototype, {
-	// retrieves tiddler from server
+	// retrieves resource from server
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
-	get: function(callback, errback) {
+	// filters is a filter string (e.g. "select=tag:foo;limit=5")
+	get: function(callback, errback, filters) {
+		var uri = this.route();
+		if(filters) {
+			var separator = uri.indexOf("?") == -1 ? "?" : ";";
+			uri += separator + filters;
+		}
 		localAjax({
-			url: this.route(),
+			url: uri,
 			type: "GET",
 			dataType: "json",
 			success: callback,
