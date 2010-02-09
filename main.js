@@ -36,15 +36,12 @@ var Resource = function(type, host) {
 	if(arguments.length) { // initialization
 		this.type = type; // XXX: somewhat redundant, as it generally corresponds to class name
 		this.host = host !== undefined ? host.replace(/\/$/, "") : null;
-		if(this.host && this.host.indexOf("://") == -1) {
-			this.host = "http://" + this.host; // XXX: evil magic?
-		}
 	}
 };
 $.extend(Resource.prototype, {
 	// retrieves tiddler from server
-	// callback arguments are as defined by jQuery.ajax:
-	// data, status, xhr (success) and  xhr, error, exc (error)
+	// callback is passed data, status, XHR (cf. jQuery.ajax success)
+	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
 	get: function(callback, errback) {
 		localAjax({
 			url: this.route(),
