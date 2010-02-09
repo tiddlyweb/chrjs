@@ -74,7 +74,7 @@ TiddlyWeb.Collection.prototype = new Resource();
 
 var TiddlerCollection = function(container, tiddler) {
 	if(arguments.length) { // initialization
-		TiddlyWeb.Collection.apply(this, [this.type, this.host]);
+		TiddlyWeb.Collection.apply(this, [tiddler ? "revisions" : "tiddlers"]);
 		this.container = container;
 		this.tiddler = tiddler || null;
 	}
@@ -82,9 +82,18 @@ var TiddlerCollection = function(container, tiddler) {
 TiddlerCollection.prototype = new TiddlyWeb.Collection();
 $.extend(TiddlerCollection.prototype, {
 	route: function() {
-		var route = this.tiddler ? "revisions" : "tiddlers";
-		var params = this.tiddler || this.container;
-		return supplant(TiddlyWeb.routes[route], params);
+		if(this.tiddler) {
+			var container = this.tiddler.bag || this.tiddler.recipe;
+			var params = {
+				type: container.type,
+				host: container.host,
+				name: container.name,
+				title: this.tiddler.title
+			};
+		} else {
+			params = this.container;
+		}
+		return supplant(TiddlyWeb.routes[this.type], params);
 	}
 });
 
@@ -101,6 +110,7 @@ TiddlyWeb.Tiddler = function(title, container) { // XXX: "type" attribute ambigu
 		this.bag = container.type == "bag" ? container.name : null;
 		this.recipe = container.type == "recipe" ? container.name : null;
 	}
+	this.revisions = new TiddlerCollection(container, this);
 };
 TiddlyWeb.Tiddler.prototype = new Resource();
 $.extend(TiddlyWeb.Tiddler.prototype, {
@@ -109,7 +119,7 @@ $.extend(TiddlyWeb.Tiddler.prototype, {
 		var params = $.extend({}, this, {
 			host: container ? container.host : null,
 			type: this.bag ? "bag" : (this.recipe ? "recipe" : null),
-			name: container ? container.name : null,
+			name: container ? container.name : null
 		});
 		return supplant(TiddlyWeb.routes[this.type], params);
 	}
