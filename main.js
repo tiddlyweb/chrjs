@@ -65,9 +65,11 @@ var Container = function(type, name, host) {
 };
 Container.prototype = new Resource();
 
-TiddlyWeb.Collection = function(type, host) {
+// attribs is an object whose members are merged into the instance (e.g. query)
+TiddlyWeb.Collection = function(type, host, attribs) {
 	if(arguments.length) { // initialization
 		Resource.apply(this, [type, host]);
+		$.extend(this, attribs);
 	}
 };
 TiddlyWeb.Collection.prototype = new Resource();
