@@ -60,22 +60,30 @@ var Container = function(type, name, host) {
 	if(arguments.length) { // initialization
 		Resource.apply(this, [type, host]);
 		this.name = name;
-		this.tiddlers = new TiddlyWeb.Collection(this.type, this.host, this);
+		this.tiddlers = new TiddlerCollection(this);
 	}
 };
 Container.prototype = new Resource();
 
-TiddlyWeb.Collection = function(type, host, container) {
+TiddlyWeb.Collection = function(type, host) {
 	if(arguments.length) { // initialization
 		Resource.apply(this, [type, host]);
-		this.container = container || null;
 	}
 };
 TiddlyWeb.Collection.prototype = new Resource();
-$.extend(TiddlyWeb.Collection.prototype, {
-	route: function() { // XXX: special-casing magic for tiddler collections
-		var route = this.container ? "tiddlers" : this.type;
-		var params = this.container ? this.container : this;
+
+var TiddlerCollection = function(container, tiddler) {
+	if(arguments.length) { // initialization
+		TiddlyWeb.Collection.apply(this, [this.type, this.host]);
+		this.container = container;
+		this.tiddler = tiddler || null;
+	}
+};
+TiddlerCollection.prototype = new TiddlyWeb.Collection();
+$.extend(TiddlerCollection.prototype, {
+	route: function() {
+		var route = this.tiddler ? "revisions" : "tiddlers";
+		var params = this.tiddler || this.container;
 		return supplant(TiddlyWeb.routes[route], params);
 	}
 });
