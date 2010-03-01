@@ -2,8 +2,9 @@
 // v0.5.0
 //
 // TODO:
-// * error handling in callbacks
-// * use Crockford's Prototypal Inheritance to avoid "new" operator
+// * avoid circular references (collection->tiddler->collection->...)
+// * route callbacks through onSuccess/onError methods to return corresponding instance
+// ** use "_" prefix for non-tiddler-data attributes
 // * remove localAjax (higher-level applications' responsibility)
 // * ensure all routes are supported
 // * PUT support (in separate file?)
@@ -55,7 +56,7 @@ $.extend(Resource.prototype, {
 			dataType: "json",
 			success: callback,
 			error: errback
-		}); // TODO: route callbacks through onSuccess/onError methods to return corresponding instance?
+		});
 	},
 	route: function() {
 		return supplant(TiddlyWeb.routes[this.type], this);
@@ -83,7 +84,7 @@ TiddlyWeb.Collection.prototype = new Resource();
 var TiddlerCollection = function(container, tiddler) {
 	if(arguments.length) { // initialization
 		TiddlyWeb.Collection.apply(this, [tiddler ? "revisions" : "tiddlers"]);
-		this.container = container;
+		this.container = container || null;
 		this.tiddler = tiddler || null;
 	}
 };
@@ -105,19 +106,13 @@ $.extend(TiddlerCollection.prototype, {
 	}
 });
 
-/*
- * Tiddler
- */
-
 // title is the name of the tiddler
 // container (optional) is an instance of either Bag or Recipe
 TiddlyWeb.Tiddler = function(title, container) { // XXX: "type" attribute ambiguous (class name vs. content type)
 	Resource.apply(this, ["tiddler"]);
 	this.title = title;
-	if(container) {
-		this.bag = container.type == "bag" ? container.name : null;
-		this.recipe = container.type == "recipe" ? container.name : null;
-	}
+	this.bag = container && container.type == "bag" ? container.name : null;
+	this.recipe = container && container.type == "recipe" ? container.name : null;
 	this.revisions = new TiddlerCollection(container, this);
 };
 TiddlyWeb.Tiddler.prototype = new Resource();
@@ -133,18 +128,10 @@ $.extend(TiddlyWeb.Tiddler.prototype, {
 	}
 });
 
-/*
- * Bag
- */
-
 TiddlyWeb.Bag = function(name, host) {
 	Container.apply(this, ["bag", name, host]);
 };
 TiddlyWeb.Bag.prototype = new Container();
-
-/*
- * Recipe
- */
 
 TiddlyWeb.Recipe = function(name, host) {
 	Container.apply(this, ["recipe", name, host]);
