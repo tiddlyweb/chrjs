@@ -2,7 +2,6 @@
 // v0.5.0
 //
 // TODO:
-// * avoid circular references (collection->tiddler->collection->...)
 // * route callbacks through onSuccess/onError methods to return corresponding instance
 // ** use "_" prefix for non-tiddler-data attributes
 // * remove localAjax (higher-level applications' responsibility)

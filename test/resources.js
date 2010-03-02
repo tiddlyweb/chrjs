@@ -43,7 +43,66 @@ test("Bag", function() {
 	strictEqual(bag.route(), "http://example.com/bags/Charlie");
 });
 
-test("Revisions", function() {
+test("Recipe", function() {
+	var recipe;
+
+	recipe = new TiddlyWeb.Recipe("Omega");
+	strictEqual(recipe.name, "Omega");
+	strictEqual(recipe.host, null);
+
+	recipe = new TiddlyWeb.Recipe("Psi", "example.com");
+	strictEqual(recipe.host, "example.com");
+	strictEqual(recipe.route(), "example.com/recipes/Psi");
+
+	recipe = new TiddlyWeb.Recipe("Chi");
+	strictEqual(recipe.route(), "{host}/recipes/Chi");
+	recipe.host = "http://example.com";
+	strictEqual(recipe.route(), "http://example.com/recipes/Chi");
+});
+
+test("Collection: Bags", function() {
+	var bags;
+
+	bags = new TiddlyWeb.Collection("bags");
+	strictEqual(bags.route(), "{host}/bags");
+	bags.host = "http://example.com";
+	strictEqual(bags.route(), "http://example.com/bags");
+
+	bags = new TiddlyWeb.Collection("bags", "http://example.com");
+	strictEqual(bags.route(), "http://example.com/bags");
+});
+
+test("Collection: Recipes", function() {
+	var recipes;
+
+	recipes = new TiddlyWeb.Collection("recipes");
+	strictEqual(recipes.route(), "{host}/recipes");
+	recipes.host = "http://example.com";
+	strictEqual(recipes.route(), "http://example.com/recipes");
+
+	recipes = new TiddlyWeb.Collection("recipes", "http://example.com");
+	strictEqual(recipes.route(), "http://example.com/recipes");
+});
+
+test("Collection: Bag Tiddlers", function() {
+	var bag;
+
+	bag = new TiddlyWeb.Bag("Alpha", "http://example.com");
+	strictEqual(bag.tiddlers.type, "tiddlers");
+	strictEqual(bag.tiddlers.container.type, "bag");
+	strictEqual(bag.tiddlers.route(), "http://example.com/bags/Alpha/tiddlers");
+});
+
+test("Collection: Recipe Tiddlers", function() {
+	var recipe;
+
+	recipe = new TiddlyWeb.Recipe("Omega", "http://example.com");
+	strictEqual(recipe.tiddlers.type, "tiddlers");
+	strictEqual(recipe.tiddlers.container.type, "recipe");
+	strictEqual(recipe.tiddlers.route(), "http://example.com/recipes/Omega/tiddlers");
+});
+
+test("Collection: Tiddler Revisions", function() {
 	var tiddler;
 
 	tiddler = new TiddlyWeb.Tiddler("Foo");
