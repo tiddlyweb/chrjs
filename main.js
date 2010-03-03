@@ -78,8 +78,8 @@ $.extend(TiddlyWeb.prototype, {
 	},
 
 	/*
-	 * policy is an object with members write, create, delete, manage and accept,
-	 * each an array of users/roles
+	 * policy is an object with members read, write, create, delete, manage and
+	 * accept, each an array of users/roles
 	 */
 	saveBag: function(name, policy, callback) {
 		var uri = "/bags/" + encodeURIComponent(name);
