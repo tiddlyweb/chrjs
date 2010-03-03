@@ -66,6 +66,36 @@ $.extend(Resource.prototype, {
 	parse: function(data) {
 		return data;
 	},
+	// sends resource to server
+	// callback is passed data, status, XHR (cf. jQuery.ajax success)
+	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
+	put: function(callback, errback) {
+		var uri = this.route();
+		console.log("PUT", this.data(), uri);
+		try {
+		localAjax({
+			url: uri,
+			type: "PUT",
+			contentType: "application/json",
+			data: $.toJSON(this.data()),
+			success: callback, // XXX: pre-OO chrjs used jQuery.ajax complete for some (valid) reason
+			error: errback
+		});
+		} catch(exc) {
+			console.log("FAIL", exc);
+		}
+	},
+	// returns sanitized representation for serialization
+	data: function() {
+		var data = {};
+		for(var key in this) {
+			var value = this[key];
+			if(typeof value != "function" && !(value instanceof Resource)) { // XXX: instanceof use hacky?
+				data[key] = value;
+			}
+		}
+		return data;
+	},
 	route: function() {
 		return supplant(TiddlyWeb.routes[this._type], this);
 	}
@@ -150,6 +180,12 @@ $.extend(TiddlyWeb.Tiddler.prototype, {
 			tiddler.recipe = this.recipe;
 		};
 		return $.extend(tiddler, data);
+	},
+	data: function() {
+		var data = Resource.prototype.data.apply(this, arguments);
+		var type = this.bag ? "bag" : "recipe";
+		data[type] = { host: this[type].host }; // XXX: hacky way to avoid recursion error during serialization!?
+		return data;
 	}
 });
 
