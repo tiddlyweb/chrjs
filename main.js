@@ -34,7 +34,9 @@ TiddlyWeb = {
 var Resource = function(type, host) {
 	if(arguments.length) { // initialization
 		this._type = type; // XXX: somewhat redundant, as it generally corresponds to class name
-		this.host = host !== undefined ? host.replace(/\/$/, "") : null;
+		if(host !== false) {
+			this.host = host !== undefined ? host.replace(/\/$/, "") : null;
+		}
 	}
 };
 $.extend(Resource.prototype, {
@@ -107,7 +109,7 @@ $.extend(TiddlerCollection.prototype, {
 // title is the name of the tiddler
 // container (optional) is an instance of either Bag or Recipe
 TiddlyWeb.Tiddler = function(title, container) {
-	Resource.apply(this, ["tiddler"]);
+	Resource.apply(this, ["tiddler", false]);
 	this.title = title;
 	this.bag = container && container._type == "bag" ? container.name : null;
 	this.recipe = container && container._type == "recipe" ? container.name : null;

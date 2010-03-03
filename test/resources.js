@@ -5,6 +5,7 @@ test("Tiddler", function() {
 	strictEqual(tiddler.title, "Foo");
 	strictEqual(tiddler.bag, null);
 	strictEqual(tiddler.recipe, null);
+	strictEqual(tiddler.host, undefined);
 
 	bag = new TiddlyWeb.Bag("Alpha");
 	tiddler = new TiddlyWeb.Tiddler("Bar", bag);
