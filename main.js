@@ -3,7 +3,6 @@
 //
 // TODO:
 // * route callbacks through onSuccess/onError methods to return corresponding instance
-// ** use "_" prefix for non-tiddler-data attributes
 // * remove localAjax (higher-level applications' responsibility)
 // * ensure all routes are supported
 // * PUT support (in separate file?)
@@ -17,16 +16,16 @@
 TiddlyWeb = {
 	routes: {
 		// host is the TiddlyWeb instance's URI (including server_prefix)
-		// placeholders "type" & "name" refer to the respective bag/recipe
+		// placeholders "_type" & "name" refer to the respective bag/recipe
 		root     : "{host}/",
 		bags     : "{host}/bags",
 		bag      : "{host}/bags/{name}",
 		recipes  : "{host}/recipes",
 		recipe   : "{host}/recipes/{name}",
-		tiddlers : "{host}/{type}s/{name}/tiddlers",
-		tiddler  : "{host}/{type}s/{name}/tiddlers/{title}",
-		revisions: "{host}/{type}s/{name}/tiddlers/{title}/revisions",
-		revision : "{host}/{type}s/{name}/tiddlers/{title}/revisions/{id}",
+		tiddlers : "{host}/{_type}s/{name}/tiddlers",
+		tiddler  : "{host}/{_type}s/{name}/tiddlers/{title}",
+		revisions: "{host}/{_type}s/{name}/tiddlers/{title}/revisions",
+		revision : "{host}/{_type}s/{name}/tiddlers/{title}/revisions/{id}",
 		search   : "{host}/search?q={query}"
 	}
 };
@@ -34,7 +33,7 @@ TiddlyWeb = {
 // host (optional) is the URI of the originating TiddlyWeb instance
 var Resource = function(type, host) {
 	if(arguments.length) { // initialization
-		this.type = type; // XXX: somewhat redundant, as it generally corresponds to class name
+		this._type = type; // XXX: somewhat redundant, as it generally corresponds to class name
 		this.host = host !== undefined ? host.replace(/\/$/, "") : null;
 	}
 };
@@ -58,7 +57,7 @@ $.extend(Resource.prototype, {
 		});
 	},
 	route: function() {
-		return supplant(TiddlyWeb.routes[this.type], this);
+		return supplant(TiddlyWeb.routes[this._type], this);
 	}
 });
 
@@ -93,7 +92,7 @@ $.extend(TiddlerCollection.prototype, {
 		if(this.tiddler) {
 			var container = this.tiddler.bag || this.tiddler.recipe;
 			var params = {
-				type: container.type,
+				_type: container._type,
 				host: container.host,
 				name: container.name,
 				title: this.tiddler.title
@@ -101,17 +100,17 @@ $.extend(TiddlerCollection.prototype, {
 		} else {
 			params = this.container;
 		}
-		return supplant(TiddlyWeb.routes[this.type], params);
+		return supplant(TiddlyWeb.routes[this._type], params);
 	}
 });
 
 // title is the name of the tiddler
 // container (optional) is an instance of either Bag or Recipe
-TiddlyWeb.Tiddler = function(title, container) { // XXX: "type" attribute ambiguous (class name vs. content type)
+TiddlyWeb.Tiddler = function(title, container) {
 	Resource.apply(this, ["tiddler"]);
 	this.title = title;
-	this.bag = container && container.type == "bag" ? container.name : null;
-	this.recipe = container && container.type == "recipe" ? container.name : null;
+	this.bag = container && container._type == "bag" ? container.name : null;
+	this.recipe = container && container._type == "recipe" ? container.name : null;
 	this.revisions = new TiddlerCollection(container, this);
 };
 TiddlyWeb.Tiddler.prototype = new Resource();
@@ -120,10 +119,10 @@ $.extend(TiddlyWeb.Tiddler.prototype, {
 		var container = this.bag || this.recipe;
 		var params = $.extend({}, this, {
 			host: container ? container.host : null,
-			type: this.bag ? "bag" : (this.recipe ? "recipe" : null),
+			_type: this.bag ? "bag" : (this.recipe ? "recipe" : null),
 			name: container ? container.name : null
 		});
-		return supplant(TiddlyWeb.routes[this.type], params);
+		return supplant(TiddlyWeb.routes[this._type], params);
 	}
 });
 

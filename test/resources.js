@@ -88,8 +88,8 @@ test("Collection: Bag Tiddlers", function() {
 	var bag;
 
 	bag = new TiddlyWeb.Bag("Alpha", "http://example.com");
-	strictEqual(bag.tiddlers.type, "tiddlers");
-	strictEqual(bag.tiddlers.container.type, "bag");
+	strictEqual(bag.tiddlers._type, "tiddlers");
+	strictEqual(bag.tiddlers.container._type, "bag");
 	strictEqual(bag.tiddlers.route(), "http://example.com/bags/Alpha/tiddlers");
 });
 
@@ -97,8 +97,8 @@ test("Collection: Recipe Tiddlers", function() {
 	var recipe;
 
 	recipe = new TiddlyWeb.Recipe("Omega", "http://example.com");
-	strictEqual(recipe.tiddlers.type, "tiddlers");
-	strictEqual(recipe.tiddlers.container.type, "recipe");
+	strictEqual(recipe.tiddlers._type, "tiddlers");
+	strictEqual(recipe.tiddlers.container._type, "recipe");
 	strictEqual(recipe.tiddlers.route(), "http://example.com/recipes/Omega/tiddlers");
 });
 
@@ -106,7 +106,7 @@ test("Collection: Tiddler Revisions", function() {
 	var tiddler;
 
 	tiddler = new TiddlyWeb.Tiddler("Foo");
-	strictEqual(tiddler.revisions.type, "revisions");
+	strictEqual(tiddler.revisions._type, "revisions");
 	strictEqual(tiddler.revisions.container, null);
 
 	tiddler = new TiddlyWeb.Tiddler("Foo");
