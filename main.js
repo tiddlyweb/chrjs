@@ -2,7 +2,6 @@
 // v0.5.0
 //
 // TODO:
-// * route callbacks through onSuccess/onError methods to return corresponding instance
 // * remove localAjax (higher-level applications' responsibility)
 // * ensure all routes are supported
 // * PUT support (in separate file?)
@@ -50,13 +49,21 @@ $.extend(Resource.prototype, {
 			var separator = uri.indexOf("?") == -1 ? "?" : ";";
 			uri += separator + filters;
 		}
+		var self = this;
 		localAjax({
 			url: uri,
 			type: "GET",
 			dataType: "json",
-			success: callback,
+			success: function(data, status, xhr) {
+				var resource = self.parse(data);
+				callback(resource, status, xhr);
+			},
 			error: errback
 		});
+	},
+	// returns corresponding instance from raw JSON object (if applicable)
+	parse: function(data) {
+		return data;
 	},
 	route: function() {
 		return supplant(TiddlyWeb.routes[this._type], this);
@@ -71,6 +78,13 @@ var Container = function(type, name, host) {
 	}
 };
 Container.prototype = new Resource();
+$.extend(Container.prototype, {
+	parse: function(data) {
+		var type = this._type.charAt(0).toUpperCase() + this._type.slice(1);
+		var container = new TiddlyWeb[type](this.name, this.host);
+		return $.extend(container, data);
+	}
+});
 
 // attribs is an object whose members are merged into the instance (e.g. query)
 TiddlyWeb.Collection = function(type, host, attribs) {
@@ -125,6 +139,13 @@ $.extend(TiddlyWeb.Tiddler.prototype, {
 			name: container ? container.name : null
 		});
 		return supplant(TiddlyWeb.routes[this._type], params);
+	},
+	parse: function(data) {
+		var tiddler = new TiddlyWeb.Tiddler(this.title);
+		var container = this.bag || this.recipe;
+		tiddler.bag = new TiddlyWeb.Bag(data.bag, container.host);
+		delete data.bag;
+		return $.extend(tiddler, data);
 	}
 });
 
@@ -149,7 +170,7 @@ var supplant = function(str, obj) {
 
 // enables AJAX calls from a local file
 // triggers regular jQuery.ajax call after requesting enhanced privileges
-var localAjax = function(args) { // XXX: for debugging purposes only!?
+var localAjax = function(args) {
 	if(document.location.protocol.indexOf("file") == 0 && window.Components &&
 		window.netscape && window.netscape.security) {
 		window.netscape.security.PrivilegeManager.
