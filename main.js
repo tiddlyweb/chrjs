@@ -3,6 +3,7 @@
 //
 // TODO:
 // * remove localAjax (higher-level applications' responsibility)
+// * Policy class (attributes read, write, create, delete, manage, accept and owner)
 // * ensure all routes are supported
 // * PUT support (in separate file?)
 // * move classes' initialization to separate init method (=> no need for .apply?)
@@ -145,6 +146,9 @@ $.extend(TiddlyWeb.Tiddler.prototype, {
 		var container = this.bag || this.recipe;
 		tiddler.bag = new TiddlyWeb.Bag(data.bag, container.host);
 		delete data.bag;
+		if(this.recipe) {
+			tiddler.recipe = this.recipe;
+		};
 		return $.extend(tiddler, data);
 	}
 });

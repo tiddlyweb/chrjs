@@ -1,3 +1,5 @@
+module("resources");
+
 test("Tiddler", function() {
 	var tiddler, bag, recipe;
 
