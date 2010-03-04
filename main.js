@@ -71,8 +71,6 @@ $.extend(Resource.prototype, {
 	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
 	put: function(callback, errback) {
 		var uri = this.route();
-		console.log("PUT", this.data(), uri);
-		try {
 		localAjax({
 			url: uri,
 			type: "PUT",
@@ -81,9 +79,6 @@ $.extend(Resource.prototype, {
 			success: callback, // XXX: pre-OO chrjs used jQuery.ajax complete for some (valid) reason
 			error: errback
 		});
-		} catch(exc) {
-			console.log("FAIL", exc);
-		}
 	},
 	// returns sanitized representation for serialization
 	data: function() {
@@ -94,6 +89,7 @@ $.extend(Resource.prototype, {
 				data[key] = value;
 			}
 		}
+		delete data._type;
 		return data;
 	},
 	route: function() {
@@ -178,7 +174,7 @@ $.extend(TiddlyWeb.Tiddler.prototype, {
 		delete data.bag;
 		if(this.recipe) {
 			tiddler.recipe = this.recipe;
-		};
+		}
 		return $.extend(tiddler, data);
 	},
 	data: function() {
