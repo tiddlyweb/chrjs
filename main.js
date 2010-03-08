@@ -101,11 +101,13 @@ var Container = function(type, name, host) {
 	if(arguments.length) { // initialization
 		Resource.apply(this, [type, host]);
 		this.name = name;
-		this.tiddlers = new TiddlerCollection(this);
 	}
 };
 Container.prototype = new Resource();
 $.extend(Container.prototype, {
+	tiddlers: function() {
+		return new TiddlerCollection(this);
+	},
 	parse: function(data) {
 		var type = this._type.charAt(0).toUpperCase() + this._type.slice(1);
 		var container = new TiddlyWeb[type](this.name, this.host);
@@ -154,10 +156,12 @@ TiddlyWeb.Tiddler = function(title, container) {
 	this.title = title;
 	this.bag = container && container._type == "bag" ? container.name : null;
 	this.recipe = container && container._type == "recipe" ? container.name : null;
-	this.revisions = new TiddlerCollection(container, this);
 };
 TiddlyWeb.Tiddler.prototype = new Resource();
 $.extend(TiddlyWeb.Tiddler.prototype, {
+	revisions: function() {
+		return new TiddlerCollection(this.bag || this.recipe, this);
+	},
 	route: function() {
 		var container = this.bag || this.recipe;
 		var params = $.extend({}, this, {

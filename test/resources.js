@@ -91,26 +91,26 @@ test("Collection: Bag Tiddlers", function() {
 	var bag;
 
 	bag = new TiddlyWeb.Bag("Alpha", "http://example.com");
-	strictEqual(bag.tiddlers._type, "tiddlers");
-	strictEqual(bag.tiddlers.container._type, "bag");
-	strictEqual(bag.tiddlers.route(), "http://example.com/bags/Alpha/tiddlers");
+	strictEqual(bag.tiddlers()._type, "tiddlers");
+	strictEqual(bag.tiddlers().container._type, "bag");
+	strictEqual(bag.tiddlers().route(), "http://example.com/bags/Alpha/tiddlers");
 });
 
 test("Collection: Recipe Tiddlers", function() {
 	var recipe;
 
 	recipe = new TiddlyWeb.Recipe("Omega", "http://example.com");
-	strictEqual(recipe.tiddlers._type, "tiddlers");
-	strictEqual(recipe.tiddlers.container._type, "recipe");
-	strictEqual(recipe.tiddlers.route(), "http://example.com/recipes/Omega/tiddlers");
+	strictEqual(recipe.tiddlers()._type, "tiddlers");
+	strictEqual(recipe.tiddlers().container._type, "recipe");
+	strictEqual(recipe.tiddlers().route(), "http://example.com/recipes/Omega/tiddlers");
 });
 
 test("Collection: Tiddler Revisions", function() {
 	var tiddler;
 
 	tiddler = new TiddlyWeb.Tiddler("Foo");
-	strictEqual(tiddler.revisions._type, "revisions");
-	strictEqual(tiddler.revisions.container, null);
+	strictEqual(tiddler.revisions()._type, "revisions");
+	strictEqual(tiddler.revisions().container, null);
 
 	tiddler = new TiddlyWeb.Tiddler("Foo");
 	tiddler.bag = new TiddlyWeb.Bag("Alpha");
@@ -121,11 +121,11 @@ test("Collection: Tiddler Revisions", function() {
 
 	tiddler = new TiddlyWeb.Tiddler("Foo");
 	tiddler.recipe = new TiddlyWeb.Recipe("Omega");
-	strictEqual(tiddler.revisions.route(), "{host}/recipes/Omega/tiddlers/Foo/revisions");
+	strictEqual(tiddler.revisions().route(), "{host}/recipes/Omega/tiddlers/Foo/revisions");
 	tiddler.recipe.host = "http://example.org";
-	strictEqual(tiddler.revisions.route(), "http://example.org/recipes/Omega/tiddlers/Foo/revisions");
+	strictEqual(tiddler.revisions().route(), "http://example.org/recipes/Omega/tiddlers/Foo/revisions");
 	tiddler.bag = new TiddlyWeb.Bag("Alpha");
-	strictEqual(tiddler.revisions.route(), "{host}/bags/Alpha/tiddlers/Foo/revisions");
+	strictEqual(tiddler.revisions().route(), "{host}/bags/Alpha/tiddlers/Foo/revisions");
 	tiddler.bag.host = "http://example.org";
-	strictEqual(tiddler.revisions.route(), "http://example.org/bags/Alpha/tiddlers/Foo/revisions");
+	strictEqual(tiddler.revisions().route(), "http://example.org/bags/Alpha/tiddlers/Foo/revisions");
 });
