@@ -40,7 +40,7 @@ var Resource = function(type, host) {
 };
 $.extend(Resource.prototype, {
 	// retrieves resource from server
-	// callback is passed data, status, XHR (cf. jQuery.ajax success)
+	// callback is passed resource, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
 	// filters is a filter string (e.g. "select=tag:foo;limit=5")
 	get: function(callback, errback, filters) {
@@ -61,10 +61,6 @@ $.extend(Resource.prototype, {
 			error: errback
 		});
 	},
-	// returns corresponding instance from raw JSON object (if applicable)
-	parse: function(data) {
-		return data;
-	},
 	// sends resource to server
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
@@ -83,6 +79,22 @@ $.extend(Resource.prototype, {
 			success: callback, // XXX: pre-OO chrjs used jQuery.ajax complete for some (valid) reason
 			error: errback
 		});
+	},
+	// deletes resource on server
+	// callback is passed data, status, XHR (cf. jQuery.ajax success)
+	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
+	"delete": function(callback, errback) {
+		var uri = this.route();
+		localAjax({
+			url: uri,
+			type: "DELETE",
+			success: callback,
+			error: errback
+		});
+	},
+	// returns corresponding instance from raw JSON object (if applicable)
+	parse: function(data) {
+		return data;
 	},
 	// list of accepted keys in serialization
 	data: [],
