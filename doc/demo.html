@@ -130,6 +130,18 @@ var recipe = new TiddlyWeb.Recipe("sandbox", host);
 recipe.tiddlers().get(callback, errback);
 	</pre>
 
+	<h3>Retrieving the List of Bags</h3>
+	<pre>
+var bags = new TiddlyWeb.Collection("bags", host);
+bags.get(callback, errback);
+	</pre>
+
+	<h3>Retrieving the List of Recipes</h3>
+	<pre>
+var recipes = new TiddlyWeb.Collection("recipes", host);
+recipes.get(callback, errback);
+	</pre>
+
 	<script src="jquery.min.js" type="text/javascript"></script>
 	<script src="jquery-json.min.js" type="text/javascript"></script>
 	<script src="../main.js" type="text/javascript"></script>
