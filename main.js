@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.5.0
+// v0.5.1
 //
 // TODO:
 // * remove localAjax (higher-level applications' responsibility)
@@ -210,7 +210,10 @@ $.extend(TiddlyWeb.Recipe.prototype, {
 
 // adapted from Crockford (http://javascript.crockford.com/remedial.html)
 var supplant = function(str, obj) {
-	return str.replace(/{([^{}]*)}/g, function (a, b) { return obj[b] || a; });
+	return str.replace(/{([^{}]*)}/g, function (a, b) {
+		var r = o[b];
+		return typeof r === "string" || typeof r === "number" ? r : a;
+	});
 };
 
 // enables AJAX calls from a local file
