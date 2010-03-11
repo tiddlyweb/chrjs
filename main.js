@@ -3,12 +3,11 @@
 //
 // TODO:
 // * remove localAjax (higher-level applications' responsibility)
-// * Policy class (attributes read, write, create, delete, manage, accept and owner)
+// * DELETE support
 // * ensure all routes are supported
-// * PUT support (in separate file?)
+// * Policy class (attributes read, write, create, delete, manage, accept and owner)
 // * move classes' initialization to separate init method (=> no need for .apply?)
 // * create wrapper function for inheritance
-// * login/challenge support? (delegate to user errback?)
 // * documentation
 
 (function($) {
@@ -71,27 +70,23 @@ $.extend(Resource.prototype, {
 	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
 	put: function(callback, errback) {
 		var uri = this.route();
+		var data = {};
+		var self = this;
+		$.each(this.data, function(i, item) {
+			data[item] = self[item];
+		});
 		localAjax({
 			url: uri,
 			type: "PUT",
 			contentType: "application/json",
-			data: $.toJSON(this.data()),
+			data: $.toJSON(data),
 			success: callback, // XXX: pre-OO chrjs used jQuery.ajax complete for some (valid) reason
 			error: errback
 		});
 	},
-	// returns sanitized representation for serialization
-	data: function() {
-		var data = {};
-		for(var key in this) {
-			var value = this[key];
-			if(typeof value != "function" && !(value instanceof Resource)) { // XXX: instanceof use hacky?
-				data[key] = value;
-			}
-		}
-		delete data._type;
-		return data;
-	},
+	// list of accepted keys in serialization
+	data: [],
+	// returns resource's URI
 	route: function() {
 		return supplant(TiddlyWeb.routes[this._type], this);
 	}
@@ -112,7 +107,8 @@ $.extend(Container.prototype, {
 		var type = this._type.charAt(0).toUpperCase() + this._type.slice(1);
 		var container = new TiddlyWeb[type](this.name, this.host);
 		return $.extend(container, data);
-	}
+	},
+	data: ["desc", "policy"]
 });
 
 // attribs is an object whose members are merged into the instance (e.g. query)
@@ -181,12 +177,7 @@ $.extend(TiddlyWeb.Tiddler.prototype, {
 		}
 		return $.extend(tiddler, data);
 	},
-	data: function() {
-		var data = Resource.prototype.data.apply(this, arguments);
-		var type = this.bag ? "bag" : "recipe";
-		data[type] = { host: this[type].host }; // XXX: hacky way to avoid recursion error during serialization!?
-		return data;
-	}
+	data: ["created", "modified", "modifier", "tags", "fields", "text", "type"]
 });
 
 TiddlyWeb.Bag = function(name, host) {
@@ -198,6 +189,9 @@ TiddlyWeb.Recipe = function(name, host) {
 	Container.apply(this, ["recipe", name, host]);
 };
 TiddlyWeb.Recipe.prototype = new Container();
+$.extend(TiddlyWeb.Recipe.prototype, {
+	data: ["recipe"].concat(Container.prototype.data)
+});
 
 /*
  * utilities
