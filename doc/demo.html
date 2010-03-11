@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>chrjs - TiddlyWeb JavaScript library</title>
+	<link rel="stylesheet" type="text/css" href="styles/main.css">
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			width: 80%;
+			margin: 0 auto;
+		}
+
+		h1, h2, h3, h4, h5, h6,
+		p,
+		ul, ol, dl {
+			margin-bottom: 0.5em;
+		}
+
+		h1, h2, h3, h4, h5, h6 {
+			margin-top: 1em;
+		}
+
+		pre {
+			margin-bottom: -1em; /* compensate for trailing blank line */
+		}
+
+		#host {
+			width: 20em;
+		}
+
+		#notify pre {
+			white-space: pre-wrap;
+			border: 1px solid #DB4;
+			padding: 5px;
+			background-color: #FFC;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>chrjs - client-side HTTP requests from JavaScript</h1>
+	<h2>JavaScript library for TiddlyWeb clients</h2>
+
+	<div id="options">
+		<label for="host">Host</label>
+		<input id="host" type="text" value="http://tiddlyweb.peermore.com/wiki/">
+	</div>
+
+	<div id="notify"></div>
+
+	<h3>Retrieving a Tiddler</h3>
+	<pre>
+tiddler = new TiddlyWeb.Tiddler("Foo");
+tiddler.bag = new TiddlyWeb.Bag("sandbox", host);
+tiddler.get(callback, errback);
+	</pre>
+
+	<h3>Storing a Tiddler</h3>
+	<pre>
+tiddler = new TiddlyWeb.Tiddler("Foo");
+tiddler.bag = new TiddlyWeb.Bag("sandbox", host);
+tiddler.tags = ["foo", "bar", "baz"];
+tiddler.fields = {
+	foo: "lorem",
+	bar: "ipsum"
+};
+tiddler.text = "lorem ipsum\ndolor sit amet";
+tiddler.put(callback, errback);
+	</pre>
+
+	<h3>Retrieving a Bag</h3>
+	<pre>
+var bag = new TiddlyWeb.Bag("sandbox", host);
+bag.get(callback, errback);
+	</pre>
+
+	<h3>Storing a Bag</h3>
+	<pre>
+var bag = new TiddlyWeb.Bag("sandbox", host);
+bag.desc = "lorem ipsum";
+bag.policy = {
+	"read": [],
+	"write": ["ANY"],
+	"create": ["ANY"],
+	"delete": ["NONE"],
+	"manage": ["R:ADMIN"],
+	"accept": ["R:ADMIN"],
+	"owner": "administrator"
+};
+bag.put(callback, errback);
+	</pre>
+
+	<h3>Retrieving a Recipe</h3>
+	<pre>
+var recipe = new TiddlyWeb.Recipe("sandbox", host);
+recipe.get(callback, errback);
+	</pre>
+
+	<h3>Storing a Recipe</h3>
+	<pre>
+var recipe = new TiddlyWeb.Recipe("sandbox", host);
+recipe.desc = "lorem ipsum";
+recipe.policy = {
+	"read": [],
+	"manage": ["R:ADMIN"],
+	"owner": "administrator"
+};
+recipe.recipe = [
+	["system", ""],
+	["sandbox", ""]
+];
+recipe.put(callback, errback);
+	</pre>
+
+	<h3>Retrieving Tiddlers from a Bag</h3>
+	<pre>
+var bag = new TiddlyWeb.Bag("sandbox", host);
+bag.tiddlers().get(callback, errback);
+	</pre>
+
+	<h3>Retrieving Tiddlers from a Recipe</h3>
+	<pre>
+var recipe = new TiddlyWeb.Recipe("sandbox", host);
+recipe.tiddlers().get(callback, errback);
+	</pre>
+
+	<script src="jquery.min.js" type="text/javascript"></script>
+	<script src="jquery-json.min.js" type="text/javascript"></script>
+	<script src="../main.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(function() {
+
+		var notify = function(msg, data, el) {
+			$("#notify").slideUp("fast", function() {
+				$(this).remove();
+				$('<div id="notify" />').text(msg).
+					append("<pre>" + $.toJSON(data) + "</pre>"). // TODO: use pretty-print library
+					hide().
+					insertAfter(el).
+					slideDown();
+			});
+		};
+
+		var evaluateContents = function(ev) {
+			var el = this;
+			var code = $(this).prev().text();
+			var host = $("#host").val();
+			var callback = function(data, status, xhr) {
+				notify("success", data, el);
+			};
+			var errback = function(xhr, status, exc) {
+				notify("failure", status + " " + xhr.responseText, el);
+			};
+			eval(code);
+		};
+
+		$("pre").
+			after('<input type="button" value="run" title="execute code" />').
+			next().click(evaluateContents);
+		});
+	</script>
+</body>
+
+</html>

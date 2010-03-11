@@ -1,2 +1,4 @@
 test/jquery-json.min.js
 test/qunit
+doc/jquery.min.js
+doc/jquery-json.min.js
