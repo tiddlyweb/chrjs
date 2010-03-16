@@ -211,7 +211,7 @@ $.extend(TiddlyWeb.Recipe.prototype, {
 // adapted from Crockford (http://javascript.crockford.com/remedial.html)
 var supplant = function(str, obj) {
 	return str.replace(/{([^{}]*)}/g, function (a, b) {
-		var r = o[b];
+		var r = obj[b];
 		return typeof r === "string" || typeof r === "number" ? r : a;
 	});
 };
