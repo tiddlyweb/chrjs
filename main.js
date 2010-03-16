@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.5.1
+// v0.6.0
 //
 // TODO:
 // * remove localAjax (higher-level applications' responsibility)
@@ -29,7 +29,7 @@ TiddlyWeb = {
 };
 
 // host (optional) is the URI of the originating TiddlyWeb instance
-var Resource = function(type, host) {
+TiddlyWeb.Resource = function(type, host) {
 	if(arguments.length) { // initialization
 		this._type = type; // XXX: somewhat redundant, as it generally corresponds to class name
 		if(host !== false) {
@@ -37,7 +37,7 @@ var Resource = function(type, host) {
 		}
 	}
 };
-$.extend(Resource.prototype, {
+$.extend(TiddlyWeb.Resource.prototype, {
 	// retrieves resource from server
 	// callback is passed resource, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
@@ -105,11 +105,11 @@ $.extend(Resource.prototype, {
 
 var Container = function(type, name, host) {
 	if(arguments.length) { // initialization
-		Resource.apply(this, [type, host]);
+		TiddlyWeb.Resource.apply(this, [type, host]);
 		this.name = name;
 	}
 };
-Container.prototype = new Resource();
+Container.prototype = new TiddlyWeb.Resource();
 $.extend(Container.prototype, {
 	tiddlers: function() {
 		return new TiddlerCollection(this);
@@ -125,11 +125,11 @@ $.extend(Container.prototype, {
 // attribs is an object whose members are merged into the instance (e.g. query)
 TiddlyWeb.Collection = function(type, host, attribs) {
 	if(arguments.length) { // initialization
-		Resource.apply(this, [type, host]);
+		TiddlyWeb.Resource.apply(this, [type, host]);
 		$.extend(this, attribs);
 	}
 };
-TiddlyWeb.Collection.prototype = new Resource();
+TiddlyWeb.Collection.prototype = new TiddlyWeb.Resource();
 
 var TiddlerCollection = function(container, tiddler) {
 	if(arguments.length) { // initialization
@@ -159,12 +159,12 @@ $.extend(TiddlerCollection.prototype, {
 // title is the name of the tiddler
 // container (optional) is an instance of either Bag or Recipe
 TiddlyWeb.Tiddler = function(title, container) {
-	Resource.apply(this, ["tiddler", false]);
+	TiddlyWeb.Resource.apply(this, ["tiddler", false]);
 	this.title = title;
 	this.bag = container && container._type == "bag" ? container.name : null;
 	this.recipe = container && container._type == "recipe" ? container.name : null;
 };
-TiddlyWeb.Tiddler.prototype = new Resource();
+TiddlyWeb.Tiddler.prototype = new TiddlyWeb.Resource();
 $.extend(TiddlyWeb.Tiddler.prototype, {
 	revisions: function() {
 		return new TiddlerCollection(this.bag || this.recipe, this);
