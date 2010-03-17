@@ -107,6 +107,8 @@ var Container = function(type, name, host) {
 	if(arguments.length) { // initialization
 		TiddlyWeb.Resource.apply(this, [type, host]);
 		this.name = name;
+		this.desc = "";
+		this.policy = null;
 	}
 };
 Container.prototype = new TiddlyWeb.Resource();
@@ -198,6 +200,7 @@ TiddlyWeb.Bag.prototype = new Container();
 
 TiddlyWeb.Recipe = function(name, host) {
 	Container.apply(this, ["recipe", name, host]);
+	this.recipe = [];
 };
 TiddlyWeb.Recipe.prototype = new Container();
 $.extend(TiddlyWeb.Recipe.prototype, {

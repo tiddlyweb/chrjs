@@ -39,6 +39,8 @@ test("Bag", function() {
 	bag = new TiddlyWeb.Bag("Alpha");
 	strictEqual(bag.name, "Alpha");
 	strictEqual(bag.host, null);
+	strictEqual(bag.desc, "");
+	strictEqual(bag.policy, null);
 
 	bag = new TiddlyWeb.Bag("Bravo", "/~user/");
 	strictEqual(bag.host, "/~user");
@@ -56,6 +58,9 @@ test("Recipe", function() {
 	recipe = new TiddlyWeb.Recipe("Omega");
 	strictEqual(recipe.name, "Omega");
 	strictEqual(recipe.host, null);
+	strictEqual(recipe.desc, "");
+	strictEqual(recipe.policy, null);
+	strictEqual(recipe.recipe.length, 0);
 
 	recipe = new TiddlyWeb.Recipe("Psi", "example.com");
 	strictEqual(recipe.host, "example.com");
