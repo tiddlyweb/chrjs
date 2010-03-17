@@ -161,8 +161,8 @@ $.extend(TiddlerCollection.prototype, {
 TiddlyWeb.Tiddler = function(title, container) {
 	TiddlyWeb.Resource.apply(this, ["tiddler", false]);
 	this.title = title;
-	this.bag = container && container._type == "bag" ? container.name : null;
-	this.recipe = container && container._type == "recipe" ? container.name : null;
+	this.bag = container && container._type == "bag" ? container : null;
+	this.recipe = container && container._type == "recipe" ? container : null;
 };
 TiddlyWeb.Tiddler.prototype = new TiddlyWeb.Resource();
 $.extend(TiddlyWeb.Tiddler.prototype, {

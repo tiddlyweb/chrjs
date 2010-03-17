@@ -8,18 +8,21 @@ test("Tiddler", function() {
 	strictEqual(tiddler.bag, null);
 	strictEqual(tiddler.recipe, null);
 	strictEqual(tiddler.host, undefined);
+	strictEqual(tiddler.route(), "{host}/{_type}s/{name}/tiddlers/Foo");
 
 	bag = new TiddlyWeb.Bag("Alpha");
 	tiddler = new TiddlyWeb.Tiddler("Bar", bag);
 	strictEqual(tiddler.title, "Bar");
-	strictEqual(tiddler.bag, "Alpha");
+	strictEqual(tiddler.bag.name, "Alpha");
 	strictEqual(tiddler.recipe, null);
+	strictEqual(tiddler.route(), "{host}/bags/Alpha/tiddlers/Bar");
 
 	recipe = new TiddlyWeb.Recipe("Omega");
 	tiddler = new TiddlyWeb.Tiddler("Baz", recipe);
 	strictEqual(tiddler.title, "Baz");
 	strictEqual(tiddler.bag, null);
-	strictEqual(tiddler.recipe, "Omega");
+	strictEqual(tiddler.recipe.name, "Omega");
+	strictEqual(tiddler.route(), "{host}/recipes/Omega/tiddlers/Baz");
 
 	tiddler = new TiddlyWeb.Tiddler("Lorem");
 	tiddler.bag = new TiddlyWeb.Bag("Alpha");
@@ -27,6 +30,7 @@ test("Tiddler", function() {
 	strictEqual(tiddler.title, "Lorem");
 	strictEqual(tiddler.bag.name, "Alpha");
 	strictEqual(tiddler.recipe.name, "Omega");
+	strictEqual(tiddler.route(), "{host}/bags/Alpha/tiddlers/Lorem");
 });
 
 test("Bag", function() {
