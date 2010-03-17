@@ -120,7 +120,7 @@ $.extend(Container.prototype, {
 		return new TiddlerCollection(this);
 	},
 	parse: function(data) {
-		var type = this._type.charAt(0).toUpperCase() + this._type.slice(1);
+		var type = TiddlyWeb._capitalize(this._type);
 		var container = new TiddlyWeb[type](this.name, this.host);
 		return $.extend(container, data);
 	},
@@ -217,6 +217,10 @@ $.extend(TiddlyWeb.Recipe.prototype, {
 /*
  * utilities
  */
+
+TiddlyWeb._capitalize = function(str) {
+	return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 // adapted from Crockford (http://javascript.crockford.com/remedial.html)
 var supplant = function(str, obj) {
