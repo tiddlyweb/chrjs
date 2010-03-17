@@ -68,7 +68,10 @@ $.extend(TiddlyWeb.Resource.prototype, {
 		var data = {};
 		var self = this;
 		$.each(this.data, function(i, item) {
-			data[item] = self[item];
+			var value = self[item];
+			if(value !== undefined) {
+				data[item] = value;
+			}
 		});
 		localAjax({
 			url: uri,
@@ -165,6 +168,10 @@ TiddlyWeb.Tiddler = function(title, container) {
 	this.title = title;
 	this.bag = container && container._type == "bag" ? container : null;
 	this.recipe = container && container._type == "recipe" ? container : null;
+	var self = this;
+	$.each(this.data, function(i, item) {
+		self[item] = undefined; // exposes list of standard attributes for inspectability
+	});
 };
 TiddlyWeb.Tiddler.prototype = new TiddlyWeb.Resource();
 $.extend(TiddlyWeb.Tiddler.prototype, {
