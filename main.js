@@ -4,8 +4,6 @@
 // TODO:
 // * ensure all routes are supported
 // * Policy class (attributes read, write, create, delete, manage, accept and owner)
-// * move classes' initialization to separate init method (=> no need for .apply?)
-// * create wrapper function for inheritance
 // * documentation
 
 (function($) {
