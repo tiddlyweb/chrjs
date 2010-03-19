@@ -1,8 +1,7 @@
 // TiddlyWeb adaptor
-// v0.6.0
+// v0.7.0
 //
 // TODO:
-// * remove localAjax (higher-level applications' responsibility)
 // * ensure all routes are supported
 // * Policy class (attributes read, write, create, delete, manage, accept and owner)
 // * move classes' initialization to separate init method (=> no need for .apply?)
@@ -49,7 +48,7 @@ $.extend(TiddlyWeb.Resource.prototype, {
 			uri += separator + filters;
 		}
 		var self = this;
-		localAjax({
+		$.ajax({
 			url: uri,
 			type: "GET",
 			dataType: "json",
@@ -73,7 +72,7 @@ $.extend(TiddlyWeb.Resource.prototype, {
 				data[item] = value;
 			}
 		});
-		localAjax({
+		$.ajax({
 			url: uri,
 			type: "PUT",
 			contentType: "application/json",
@@ -87,7 +86,7 @@ $.extend(TiddlyWeb.Resource.prototype, {
 	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
 	"delete": function(callback, errback) {
 		var uri = this.route();
-		localAjax({
+		$.ajax({
 			url: uri,
 			type: "DELETE",
 			success: callback,
@@ -228,17 +227,6 @@ var supplant = function(str, obj) {
 		var r = obj[b];
 		return typeof r === "string" || typeof r === "number" ? r : a;
 	});
-};
-
-// enables AJAX calls from a local file
-// triggers regular jQuery.ajax call after requesting enhanced privileges
-var localAjax = function(args) {
-	if(document.location.protocol.indexOf("file") == 0 && window.Components &&
-		window.netscape && window.netscape.security) {
-		window.netscape.security.PrivilegeManager.
-			enablePrivilege("UniversalBrowserRead");
-	}
-	return jQuery.ajax(args);
 };
 
 })(jQuery);
