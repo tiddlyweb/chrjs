@@ -5,7 +5,8 @@
 
 (function($) {
 
-TiddlyWeb.routes.user = "{host}/{_type}s/{username}";
+TiddlyWeb.routes.users = "{host}/users";
+TiddlyWeb.routes.user = "{host}/users/{username}";
 
 TiddlyWeb.User = function(username, password, host) {
 	TiddlyWeb.Resource.apply(this, ["user", host]);
