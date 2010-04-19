@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.7.0
+// v0.7.1
 //
 // TODO:
 // * ensure all routes are supported
@@ -37,7 +37,7 @@ TiddlyWeb.Resource = function(type, host) {
 $.extend(TiddlyWeb.Resource.prototype, {
 	// retrieves resource from server
 	// callback is passed resource, status, XHR (cf. jQuery.ajax success)
-	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
+	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	// filters is a filter string (e.g. "select=tag:foo;limit=5")
 	get: function(callback, errback, filters) {
 		var uri = this.route();
@@ -54,12 +54,14 @@ $.extend(TiddlyWeb.Resource.prototype, {
 				var resource = self.parse(data);
 				callback(resource, status, xhr);
 			},
-			error: errback
+			error: function(xhr, error, exc) {
+				errback(xhr, error, exc, self);
+			}
 		});
 	},
 	// sends resource to server
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
-	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
+	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	put: function(callback, errback) {
 		var uri = this.route();
 		var data = {};
@@ -76,19 +78,24 @@ $.extend(TiddlyWeb.Resource.prototype, {
 			contentType: "application/json",
 			data: $.toJSON(data),
 			success: callback, // XXX: pre-OO chrjs used jQuery.ajax complete for some (valid) reason
-			error: errback
+			error: function(xhr, error, exc) {
+				errback(xhr, error, exc, self);
+			}
 		});
 	},
 	// deletes resource on server
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
-	// errback is passed XHR, error, exception (cf. jQuery.ajax error)
+	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	"delete": function(callback, errback) {
 		var uri = this.route();
+		var self = this;
 		$.ajax({
 			url: uri,
 			type: "DELETE",
 			success: callback,
-			error: errback
+			error: function(xhr, error, exc) {
+				errback(xhr, error, exc, self);
+			}
 		});
 	},
 	// returns corresponding instance from raw JSON object (if applicable)

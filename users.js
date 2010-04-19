@@ -1,4 +1,4 @@
-// chrjs user extension
+// chrjs users extension
 //
 // requires tiddlywebplugins.socialusers
 // http://github.com/tiddlyweb/tiddlyweb-plugins/tree/master/socialusers
@@ -23,18 +23,21 @@ $.extend(TiddlyWeb.User.prototype, {
 			username: this.username,
 			password: this.password
 		};
+		var self = this;
 		$.ajax({
 			url: uri,
 			type: "POST",
 			contentType: "application/json",
 			data: $.toJSON(data),
 			success: callback,
-			error: errback
+			error: function(xhr, error, exc) {
+				errback(xhr, error, exc, self);
+			}
 		});
 	},
 	setPassword: function(password, callback, errback) {
 		this.password = password;
-		this.put();
+		this.put(callback, errback);
 	},
 	data: ["password"]
 });
