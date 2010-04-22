@@ -1,14 +1,15 @@
 (function($) {
 
-var _response, _status, _xhr, _exc;
+var _response, _status, _xhr, _error, _exc;
 var _ajax = jQuery.ajax;
 
 module("transmission", {
 	setup: function() {
 		jQuery.ajax = function(options) {
-			options.success && options.success(options);
-			options.error && options.error(options);
-			options.complete && options.complete(options);
+			var resource = $.evalJSON(options.data);
+			options.success && options.success(resource, _status, _xhr);
+			options.error && options.error(_xhr, _error, _exc);
+			options.complete && options.complete(resource, _status, _xhr);
 		};
 	},
 	teardown: function() {
@@ -17,13 +18,17 @@ module("transmission", {
 });
 
 test("Tiddler", function() {
-	var tiddler, bag, _data;
+	var tiddler, bag, _data, _tiddler_orig;
 
-	var callback = function(options) {
-		_data = $.evalJSON(options.data);
+	var callback = function(tiddler, status, xhr) {
+		_data = tiddler;
+	};
+	var errback = function(xhr, error, exc, tiddler) {
+		_tiddler_orig = tiddler;
 	};
 
 	_data = null;
+	_tiddler_orig = null;
 	bag = new TiddlyWeb.Bag("Alpha", "http://example.org");
 	tiddler = new TiddlyWeb.Tiddler("Foo", bag);
 	tiddler.text = "lorem ipsum";
@@ -33,7 +38,7 @@ test("Tiddler", function() {
 		bar: "ipsum"
 	}
 	tiddler.nonStandardAttribute = "...";
-	tiddler.put(callback);
+	tiddler.put(callback, errback);
 	var keys = [];
 	for(var key in _data) {
 		keys.push(key);
@@ -43,16 +48,21 @@ test("Tiddler", function() {
 	strictEqual(_data.tags[1], "bar");
 	strictEqual(_data.fields.bar, "ipsum");
 	strictEqual(_data.nonStandardAttribute, undefined);
+	strictEqual(_tiddler_orig, tiddler);
 });
 
 test("Bag", function() {
-	var bag, _data;
+	var bag, _data, _bag_orig;
 
-	var callback = function(options) {
-		_data = $.evalJSON(options.data);
+	var callback = function(bag, status, xhr) {
+		_data = bag;
+	};
+	var errback = function(xhr, error, exc, bag) {
+		_bag_orig = bag;
 	};
 
 	_data = null;
+	_bag_orig = null;
 	bag = new TiddlyWeb.Bag("Alpha", "http://example.org");
 	bag.desc = "lorem ipsum";
 	bag.policy = {
@@ -65,7 +75,7 @@ test("Bag", function() {
 		"owner": "administrator"
 	};
 	bag.nonStandardAttribute = "...";
-	bag.put(callback);
+	bag.put(callback, errback);
 	var keys = [];
 	for(var key in _data) {
 		keys.push(key);
@@ -74,16 +84,21 @@ test("Bag", function() {
 	strictEqual(_data.desc, "lorem ipsum");
 	strictEqual(_data.policy.write[0], "ANY");
 	strictEqual(_data.nonStandardAttribute, undefined);
+	strictEqual(_bag_orig, bag);
 });
 
 test("Recipe", function() {
-	var recipe, _data;
+	var recipe, _data, _recipe_orig;
 
-	var callback = function(options) {
-		_data = $.evalJSON(options.data);
+	var callback = function(recipe, status, xhr) {
+		_data = recipe;
+	};
+	var errback = function(xhr, error, exc, recipe) {
+		_recipe_orig = recipe;
 	};
 
 	_data = null;
+	_recipe_orig = null;
 	recipe = new TiddlyWeb.Recipe("Omega", "http://example.com");
 	recipe.desc = "lorem ipsum";
 	recipe.policy = {
@@ -93,7 +108,7 @@ test("Recipe", function() {
 	};
 	recipe.recipe = [["foo", ""], ["bar", ""]]
 	recipe.nonStandardAttribute = "...";
-	recipe.put(callback);
+	recipe.put(callback, errback);
 	var keys = [];
 	for(var key in _data) {
 		keys.push(key);
@@ -103,6 +118,7 @@ test("Recipe", function() {
 	strictEqual(_data.policy.manage[0], "R:ADMIN");
 	strictEqual(_data.recipe[1][0], "bar");
 	strictEqual(_data.nonStandardAttribute, undefined);
+	strictEqual(_recipe_orig, recipe);
 });
 
 })(jQuery);

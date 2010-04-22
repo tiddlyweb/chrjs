@@ -1,6 +1,6 @@
 (function($) {
 
-var _response, _status, _xhr, _exc;
+var _response, _status, _xhr, _error, _exc;
 var _ajax = jQuery.ajax;
 
 module("retrieval", {
@@ -17,32 +17,38 @@ module("retrieval", {
 });
 
 test("Tiddler", function() {
-	var tiddler, _tiddler;
+	var tiddler, _tiddler, _tiddler_orig;
 	var host = "localhost";
 	var callback = function(tiddler, status, xhr) {
 		_tiddler = tiddler;
 	};
+	var errback = function(xhr, error, exc, tiddler) {
+		_tiddler_orig = tiddler;
+	};
 
 	_tiddler = null;
+	_tiddler_orig = null;
 	_response = {
 		bag: "Alpha"
 	};
 	tiddler = new TiddlyWeb.Tiddler("Foo");
 	tiddler.bag = new TiddlyWeb.Bag("Alpha", host);
-	tiddler.get(callback);
+	tiddler.get(callback, errback);
 	strictEqual(_tiddler._type, "tiddler");
 	strictEqual(_tiddler.title, "Foo");
 	strictEqual(_tiddler.bag._type, "bag");
 	strictEqual(_tiddler.bag.name, "Alpha");
 	strictEqual(_tiddler.bag.host, "localhost");
+	strictEqual(_tiddler_orig, tiddler);
 
 	_tiddler = null;
+	_tiddler_orig = null;
 	_response = {
 		bag: "Bravo"
 	};
 	tiddler = new TiddlyWeb.Tiddler("Bar");
 	tiddler.recipe = new TiddlyWeb.Recipe("Omega", host);
-	tiddler.get(callback);
+	tiddler.get(callback, errback);
 	strictEqual(_tiddler._type, "tiddler");
 	strictEqual(_tiddler.title, "Bar");
 	strictEqual(_tiddler.bag._type, "bag");
@@ -51,16 +57,21 @@ test("Tiddler", function() {
 	strictEqual(_tiddler.recipe._type, "recipe");
 	strictEqual(_tiddler.recipe.name, "Omega");
 	strictEqual(_tiddler.recipe.host, "localhost");
+	strictEqual(_tiddler_orig, tiddler);
 });
 
 test("Bag", function() {
-	var bag, _bag;
+	var bag, _bag, _bag_orig;
 	var host = "localhost";
 	var callback = function(bag, status, xhr) {
 		_bag = bag;
 	};
+	var errback = function(xhr, error, exc, bag) {
+		_bag_orig = bag;
+	};
 
 	_bag = null;
+	_bag_orig = null;
 	_response = {
 		desc: "lorem ipsum",
 		policy: {
@@ -74,7 +85,7 @@ test("Bag", function() {
 		}
 	};
 	bag = new TiddlyWeb.Bag("Alpha", host);
-	bag.get(callback);
+	bag.get(callback, errback);
 	strictEqual(_bag._type, "bag");
 	strictEqual(_bag.name, "Alpha");
 	strictEqual(_bag.host, "localhost");
@@ -83,6 +94,7 @@ test("Bag", function() {
 	strictEqual(_bag.policy.accept.length, 1);
 	strictEqual(_bag.policy.accept[0], "R:ADMIN");
 	strictEqual(_bag.policy.owner, "administrator");
+	strictEqual(_bag_orig, bag);
 });
 
 test("Recipe", function() {
@@ -91,8 +103,12 @@ test("Recipe", function() {
 	var callback = function(recipe, status, xhr) {
 		_recipe = recipe;
 	};
+	var errback = function(xhr, error, exc, recipe) {
+		_recipe_orig = recipe;
+	};
 
 	_recipe = null;
+	_recipe_orig = null;
 	_response = {
 		desc: "lorem ipsum",
 		policy: {
@@ -103,7 +119,7 @@ test("Recipe", function() {
 		recipe: [["foo", ""], ["bar", ""]]
 	};
 	recipe = new TiddlyWeb.Recipe("Omega", host);
-	recipe.get(callback);
+	recipe.get(callback, errback);
 	strictEqual(_recipe._type, "recipe");
 	strictEqual(_recipe.name, "Omega");
 	strictEqual(_recipe.host, "localhost");
@@ -115,6 +131,7 @@ test("Recipe", function() {
 	strictEqual(_recipe.recipe.length, 2);
 	strictEqual(_recipe.recipe[0].length, 2);
 	strictEqual(_recipe.recipe[1][0], "bar");
+	strictEqual(_recipe_orig, recipe);
 });
 
 test("Collection: Bags", function() {
