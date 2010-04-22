@@ -29,8 +29,8 @@ test("Tiddler", function() {
 
 	_data = null;
 	_tiddler_orig = null;
-	bag = new TiddlyWeb.Bag("Alpha", "http://example.org");
-	tiddler = new TiddlyWeb.Tiddler("Foo", bag);
+	bag = new tiddlyweb.Bag("Alpha", "http://example.org");
+	tiddler = new tiddlyweb.Tiddler("Foo", bag);
 	tiddler.text = "lorem ipsum";
 	tiddler.tags = ["foo", "bar", "baz"];
 	tiddler.fields = {
@@ -63,7 +63,7 @@ test("Bag", function() {
 
 	_data = null;
 	_bag_orig = null;
-	bag = new TiddlyWeb.Bag("Alpha", "http://example.org");
+	bag = new tiddlyweb.Bag("Alpha", "http://example.org");
 	bag.desc = "lorem ipsum";
 	bag.policy = {
 		"read": [],
@@ -99,7 +99,7 @@ test("Recipe", function() {
 
 	_data = null;
 	_recipe_orig = null;
-	recipe = new TiddlyWeb.Recipe("Omega", "http://example.com");
+	recipe = new tiddlyweb.Recipe("Omega", "http://example.com");
 	recipe.desc = "lorem ipsum";
 	recipe.policy = {
 		"read": [],

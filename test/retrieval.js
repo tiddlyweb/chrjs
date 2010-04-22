@@ -31,8 +31,8 @@ test("Tiddler", function() {
 	_response = {
 		bag: "Alpha"
 	};
-	tiddler = new TiddlyWeb.Tiddler("Foo");
-	tiddler.bag = new TiddlyWeb.Bag("Alpha", host);
+	tiddler = new tiddlyweb.Tiddler("Foo");
+	tiddler.bag = new tiddlyweb.Bag("Alpha", host);
 	tiddler.get(callback, errback);
 	strictEqual(_tiddler._type, "tiddler");
 	strictEqual(_tiddler.title, "Foo");
@@ -46,8 +46,8 @@ test("Tiddler", function() {
 	_response = {
 		bag: "Bravo"
 	};
-	tiddler = new TiddlyWeb.Tiddler("Bar");
-	tiddler.recipe = new TiddlyWeb.Recipe("Omega", host);
+	tiddler = new tiddlyweb.Tiddler("Bar");
+	tiddler.recipe = new tiddlyweb.Recipe("Omega", host);
 	tiddler.get(callback, errback);
 	strictEqual(_tiddler._type, "tiddler");
 	strictEqual(_tiddler.title, "Bar");
@@ -84,7 +84,7 @@ test("Bag", function() {
 			"owner": "administrator"
 		}
 	};
-	bag = new TiddlyWeb.Bag("Alpha", host);
+	bag = new tiddlyweb.Bag("Alpha", host);
 	bag.get(callback, errback);
 	strictEqual(_bag._type, "bag");
 	strictEqual(_bag.name, "Alpha");
@@ -118,7 +118,7 @@ test("Recipe", function() {
 		},
 		recipe: [["foo", ""], ["bar", ""]]
 	};
-	recipe = new TiddlyWeb.Recipe("Omega", host);
+	recipe = new tiddlyweb.Recipe("Omega", host);
 	recipe.get(callback, errback);
 	strictEqual(_recipe._type, "recipe");
 	strictEqual(_recipe.name, "Omega");

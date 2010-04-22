@@ -56,15 +56,15 @@
 
 	<h3>Retrieving a Tiddler</h3>
 	<pre>
-tiddler = new TiddlyWeb.Tiddler("Foo");
-tiddler.bag = new TiddlyWeb.Bag("sandbox", host);
+tiddler = new tiddlyweb.Tiddler("Foo");
+tiddler.bag = new tiddlyweb.Bag("sandbox", host);
 tiddler.get(callback, errback);
 	</pre>
 
 	<h3>Storing a Tiddler</h3>
 	<pre>
-tiddler = new TiddlyWeb.Tiddler("Foo");
-tiddler.bag = new TiddlyWeb.Bag("sandbox", host);
+tiddler = new tiddlyweb.Tiddler("Foo");
+tiddler.bag = new tiddlyweb.Bag("sandbox", host);
 tiddler.tags = ["foo", "bar", "baz"];
 tiddler.fields = {
 	foo: "lorem",
@@ -76,13 +76,13 @@ tiddler.put(callback, errback);
 
 	<h3>Retrieving a Bag</h3>
 	<pre>
-var bag = new TiddlyWeb.Bag("sandbox", host);
+var bag = new tiddlyweb.Bag("sandbox", host);
 bag.get(callback, errback);
 	</pre>
 
 	<h3>Storing a Bag</h3>
 	<pre>
-var bag = new TiddlyWeb.Bag("sandbox", host);
+var bag = new tiddlyweb.Bag("sandbox", host);
 bag.desc = "lorem ipsum";
 bag.policy = {
 	"read": [],
@@ -98,13 +98,13 @@ bag.put(callback, errback);
 
 	<h3>Retrieving a Recipe</h3>
 	<pre>
-var recipe = new TiddlyWeb.Recipe("sandbox", host);
+var recipe = new tiddlyweb.Recipe("sandbox", host);
 recipe.get(callback, errback);
 	</pre>
 
 	<h3>Storing a Recipe</h3>
 	<pre>
-var recipe = new TiddlyWeb.Recipe("sandbox", host);
+var recipe = new tiddlyweb.Recipe("sandbox", host);
 recipe.desc = "lorem ipsum";
 recipe.policy = {
 	"read": [],
@@ -120,25 +120,25 @@ recipe.put(callback, errback);
 
 	<h3>Retrieving Tiddlers from a Bag</h3>
 	<pre>
-var bag = new TiddlyWeb.Bag("sandbox", host);
+var bag = new tiddlyweb.Bag("sandbox", host);
 bag.tiddlers().get(callback, errback);
 	</pre>
 
 	<h3>Retrieving Tiddlers from a Recipe</h3>
 	<pre>
-var recipe = new TiddlyWeb.Recipe("sandbox", host);
+var recipe = new tiddlyweb.Recipe("sandbox", host);
 recipe.tiddlers().get(callback, errback);
 	</pre>
 
 	<h3>Retrieving the List of Bags</h3>
 	<pre>
-var bags = new TiddlyWeb.Collection("bags", host);
+var bags = new tiddlyweb.Collection("bags", host);
 bags.get(callback, errback);
 	</pre>
 
 	<h3>Retrieving the List of Recipes</h3>
 	<pre>
-var recipes = new TiddlyWeb.Collection("recipes", host);
+var recipes = new tiddlyweb.Collection("recipes", host);
 recipes.get(callback, errback);
 	</pre>
 

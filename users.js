@@ -5,16 +5,16 @@
 
 (function($) {
 
-TiddlyWeb.routes.users = "{host}/users";
-TiddlyWeb.routes.user = "{host}/users/{username}";
+tiddlyweb.routes.users = "{host}/users";
+tiddlyweb.routes.user = "{host}/users/{username}";
 
-TiddlyWeb.User = function(username, password, host) {
-	TiddlyWeb.Resource.apply(this, ["user", host]);
+tiddlyweb.User = function(username, password, host) {
+	tiddlyweb.Resource.apply(this, ["user", host]);
 	this.username = username;
 	this.password = password;
 };
-TiddlyWeb.User.prototype = new TiddlyWeb.Resource();
-$.extend(TiddlyWeb.User.prototype, {
+tiddlyweb.User.prototype = new tiddlyweb.Resource();
+$.extend(tiddlyweb.User.prototype, {
 	create: function(callback, errback) {
 		var uri = this.route().split("/"); // XXX: hacky!?
 		uri.pop();

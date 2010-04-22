@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.7.1
+// v0.8.0
 //
 // TODO:
 // * ensure all routes are supported
@@ -8,7 +8,7 @@
 
 (function($) {
 
-TiddlyWeb = {
+tiddlyweb = {
 	routes: {
 		// host is the TiddlyWeb instance's URI (including server_prefix)
 		// placeholders "_type" & "name" refer to the respective bag/recipe
@@ -26,7 +26,7 @@ TiddlyWeb = {
 };
 
 // host (optional) is the URI of the originating TiddlyWeb instance
-TiddlyWeb.Resource = function(type, host) {
+tiddlyweb.Resource = function(type, host) {
 	if(arguments.length) { // initialization
 		this._type = type; // XXX: somewhat redundant, as it generally corresponds to class name
 		if(host !== false) {
@@ -34,7 +34,7 @@ TiddlyWeb.Resource = function(type, host) {
 		}
 	}
 };
-$.extend(TiddlyWeb.Resource.prototype, {
+$.extend(tiddlyweb.Resource.prototype, {
 	// retrieves resource from server
 	// callback is passed resource, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
@@ -106,48 +106,48 @@ $.extend(TiddlyWeb.Resource.prototype, {
 	data: [],
 	// returns resource's URI
 	route: function() {
-		return supplant(TiddlyWeb.routes[this._type], this);
+		return supplant(tiddlyweb.routes[this._type], this);
 	}
 });
 
 var Container = function(type, name, host) {
 	if(arguments.length) { // initialization
-		TiddlyWeb.Resource.apply(this, [type, host]);
+		tiddlyweb.Resource.apply(this, [type, host]);
 		this.name = name;
 		this.desc = "";
 		this.policy = null;
 	}
 };
-Container.prototype = new TiddlyWeb.Resource();
+Container.prototype = new tiddlyweb.Resource();
 $.extend(Container.prototype, {
 	tiddlers: function() {
 		return new TiddlerCollection(this);
 	},
 	parse: function(data) {
-		var type = TiddlyWeb._capitalize(this._type);
-		var container = new TiddlyWeb[type](this.name, this.host);
+		var type = tiddlyweb._capitalize(this._type);
+		var container = new tiddlyweb[type](this.name, this.host);
 		return $.extend(container, data);
 	},
 	data: ["desc", "policy"]
 });
 
 // attribs is an object whose members are merged into the instance (e.g. query)
-TiddlyWeb.Collection = function(type, host, attribs) {
+tiddlyweb.Collection = function(type, host, attribs) {
 	if(arguments.length) { // initialization
-		TiddlyWeb.Resource.apply(this, [type, host]);
+		tiddlyweb.Resource.apply(this, [type, host]);
 		$.extend(this, attribs);
 	}
 };
-TiddlyWeb.Collection.prototype = new TiddlyWeb.Resource();
+tiddlyweb.Collection.prototype = new tiddlyweb.Resource();
 
 var TiddlerCollection = function(container, tiddler) {
 	if(arguments.length) { // initialization
-		TiddlyWeb.Collection.apply(this, [tiddler ? "revisions" : "tiddlers"]);
+		tiddlyweb.Collection.apply(this, [tiddler ? "revisions" : "tiddlers"]);
 		this.container = container || null;
 		this.tiddler = tiddler || null;
 	}
 };
-TiddlerCollection.prototype = new TiddlyWeb.Collection();
+TiddlerCollection.prototype = new tiddlyweb.Collection();
 $.extend(TiddlerCollection.prototype, {
 	route: function() {
 		if(this.tiddler) {
@@ -161,14 +161,14 @@ $.extend(TiddlerCollection.prototype, {
 		} else {
 			params = this.container;
 		}
-		return supplant(TiddlyWeb.routes[this._type], params);
+		return supplant(tiddlyweb.routes[this._type], params);
 	}
 });
 
 // title is the name of the tiddler
 // container (optional) is an instance of either Bag or Recipe
-TiddlyWeb.Tiddler = function(title, container) {
-	TiddlyWeb.Resource.apply(this, ["tiddler", false]);
+tiddlyweb.Tiddler = function(title, container) {
+	tiddlyweb.Resource.apply(this, ["tiddler", false]);
 	this.title = title;
 	this.bag = container && container._type == "bag" ? container : null;
 	this.recipe = container && container._type == "recipe" ? container : null;
@@ -177,8 +177,8 @@ TiddlyWeb.Tiddler = function(title, container) {
 		self[item] = undefined; // exposes list of standard attributes for inspectability
 	});
 };
-TiddlyWeb.Tiddler.prototype = new TiddlyWeb.Resource();
-$.extend(TiddlyWeb.Tiddler.prototype, {
+tiddlyweb.Tiddler.prototype = new tiddlyweb.Resource();
+$.extend(tiddlyweb.Tiddler.prototype, {
 	revisions: function() {
 		return new TiddlerCollection(this.bag || this.recipe, this);
 	},
@@ -189,12 +189,12 @@ $.extend(TiddlyWeb.Tiddler.prototype, {
 			_type: this.bag ? "bag" : (this.recipe ? "recipe" : null),
 			name: container ? container.name : null
 		});
-		return supplant(TiddlyWeb.routes[this._type], params);
+		return supplant(tiddlyweb.routes[this._type], params);
 	},
 	parse: function(data) {
-		var tiddler = new TiddlyWeb.Tiddler(this.title);
+		var tiddler = new tiddlyweb.Tiddler(this.title);
 		var container = this.bag || this.recipe;
-		tiddler.bag = new TiddlyWeb.Bag(data.bag, container.host);
+		tiddler.bag = new tiddlyweb.Bag(data.bag, container.host);
 		delete data.bag;
 		if(this.recipe) {
 			tiddler.recipe = this.recipe;
@@ -204,17 +204,17 @@ $.extend(TiddlyWeb.Tiddler.prototype, {
 	data: ["created", "modified", "modifier", "tags", "fields", "text", "type"]
 });
 
-TiddlyWeb.Bag = function(name, host) {
+tiddlyweb.Bag = function(name, host) {
 	Container.apply(this, ["bag", name, host]);
 };
-TiddlyWeb.Bag.prototype = new Container();
+tiddlyweb.Bag.prototype = new Container();
 
-TiddlyWeb.Recipe = function(name, host) {
+tiddlyweb.Recipe = function(name, host) {
 	Container.apply(this, ["recipe", name, host]);
 	this.recipe = [];
 };
-TiddlyWeb.Recipe.prototype = new Container();
-$.extend(TiddlyWeb.Recipe.prototype, {
+tiddlyweb.Recipe.prototype = new Container();
+$.extend(tiddlyweb.Recipe.prototype, {
 	data: ["recipe"].concat(Container.prototype.data)
 });
 
@@ -222,7 +222,7 @@ $.extend(TiddlyWeb.Recipe.prototype, {
  * utilities
  */
 
-TiddlyWeb._capitalize = function(str) {
+tiddlyweb._capitalize = function(str) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
