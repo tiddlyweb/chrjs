@@ -1,18 +1,18 @@
 (function($) {
 
 var _response, _status, _xhr, _error, _exc;
-var _ajax = jQuery.ajax;
+var _ajax = $.ajax;
 
 module("retrieval", {
 	setup: function() {
-		jQuery.ajax = function(options) {
+		$.ajax = function(options) {
 			options.success && options.success(_response, _status, _xhr);
 			options.error && options.error(_xhr, _error, _exc);
 			options.complete && options.complete(_response, _status, _xhr);
 		};
 	},
 	teardown: function() {
-		jQuery.ajax = _ajax;
+		$.ajax = _ajax;
 	}
 });
 

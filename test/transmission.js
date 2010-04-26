@@ -1,11 +1,11 @@
 (function($) {
 
 var _response, _status, _xhr, _error, _exc;
-var _ajax = jQuery.ajax;
+var _ajax = $.ajax;
 
 module("transmission", {
 	setup: function() {
-		jQuery.ajax = function(options) {
+		$.ajax = function(options) {
 			var resource = $.evalJSON(options.data);
 			options.success && options.success(resource, _status, _xhr);
 			options.error && options.error(_xhr, _error, _exc);
@@ -13,7 +13,7 @@ module("transmission", {
 		};
 	},
 	teardown: function() {
-		jQuery.ajax = _ajax;
+		$.ajax = _ajax;
 	}
 });
 
