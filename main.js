@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.8.0
+// v0.8.1
 //
 // TODO:
 // * ensure all routes are supported
@@ -230,7 +230,8 @@ tiddlyweb._capitalize = function(str) {
 var supplant = function(str, obj) {
 	return str.replace(/{([^{}]*)}/g, function (a, b) {
 		var r = obj[b];
-		return typeof r === "string" || typeof r === "number" ? r : a;
+		r = typeof r === "string" || typeof r === "number" ? r : a;
+		return b == "host" ? r : encodeURIComponent(r); // XXX: special-casing
 	});
 };
 
