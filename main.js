@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.8.1
+// v0.8.2
 //
 // TODO:
 // * ensure all routes are supported
@@ -46,7 +46,7 @@ $.extend(tiddlyweb.Resource.prototype, {
 			uri += separator + filters;
 		}
 		var self = this;
-		$.ajax({
+		return $.ajax({
 			url: uri,
 			type: "GET",
 			dataType: "json",
@@ -72,12 +72,12 @@ $.extend(tiddlyweb.Resource.prototype, {
 				data[item] = value;
 			}
 		});
-		$.ajax({
+		return $.ajax({
 			url: uri,
 			type: "PUT",
 			contentType: "application/json",
 			data: $.toJSON(data),
-			success: callback, // XXX: pre-OO chrjs used jQuery.ajax complete for some (valid) reason
+			success: callback,
 			error: function(xhr, error, exc) {
 				errback(xhr, error, exc, self);
 			}
@@ -89,7 +89,7 @@ $.extend(tiddlyweb.Resource.prototype, {
 	"delete": function(callback, errback) {
 		var uri = this.route();
 		var self = this;
-		$.ajax({
+		return $.ajax({
 			url: uri,
 			type: "DELETE",
 			success: callback,

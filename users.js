@@ -24,7 +24,7 @@ $.extend(tiddlyweb.User.prototype, {
 			password: this.password
 		};
 		var self = this;
-		$.ajax({
+		return $.ajax({
 			url: uri,
 			type: "POST",
 			contentType: "application/json",
@@ -37,7 +37,7 @@ $.extend(tiddlyweb.User.prototype, {
 	},
 	setPassword: function(password, callback, errback) {
 		this.password = password;
-		this.put(callback, errback);
+		return this.put(callback, errback);
 	},
 	data: ["password"]
 });
