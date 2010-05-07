@@ -1,7 +1,7 @@
 // chrjs users extension
 //
 // requires tiddlywebplugins.socialusers
-// http://github.com/tiddlyweb/tiddlyweb-plugins/tree/master/socialusers
+// http://pypi.python.org/pypi/tiddlywebplugins.socialusers
 
 (function($) {
 

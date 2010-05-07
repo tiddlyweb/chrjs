@@ -1,6 +1,10 @@
+chrjs
 JavaScript library for TiddlyWeb clients
+http://github.com/tiddlyweb/chrjs
 
 (chrjs is for client-side HTTP requests from JavaScript)
+
+Licensed under the same terms as TiddlyWeb itself (BSD).
 
 Dependencies:
 * jQuery (http://jquery.com)
