@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.8.2
+// v0.9.0
 //
 // TODO:
 // * ensure all routes are supported
@@ -149,6 +149,19 @@ var TiddlerCollection = function(container, tiddler) {
 };
 TiddlerCollection.prototype = new tiddlyweb.Collection();
 $.extend(TiddlerCollection.prototype, {
+	parse: function(data) {
+		var host = this.container.host;
+		return $.map(data, function(item, i) { // TODO: DRY (cf. Tiddler's parse method)
+			var tiddler = new tiddlyweb.Tiddler(item.title);
+			tiddler.bag = new tiddlyweb.Bag(item.bag, host);
+			delete item.bag;
+			if(item.recipe) {
+				tiddler.recipe = new tiddlyweb.Recipe(item.recipe, host);
+				delete item.recipe;
+			}
+			return $.extend(tiddler, item);
+		});
+	},
 	route: function() {
 		if(this.tiddler) {
 			var container = this.tiddler.bag || this.tiddler.recipe;

@@ -101,21 +101,79 @@ test("Collection: Recipes", function() {
 });
 
 test("Collection: Bag Tiddlers", function() {
-	var bag;
+	var bag, tiddlers, data;
 
 	bag = new tiddlyweb.Bag("Alpha", "http://example.com");
 	strictEqual(bag.tiddlers()._type, "tiddlers");
 	strictEqual(bag.tiddlers().container._type, "bag");
 	strictEqual(bag.tiddlers().route(), "http://example.com/bags/Alpha/tiddlers");
+
+	data = [
+		{
+			"title": "Foo", "bag": "Alpha", "recipe": null, "type": "None",
+			"revision": 3, "permissions": [],
+			"created": "20100712000000", "creator": "fnd",
+			"modified": "20100612104500", "modifier": "fnd",
+			"fields": {}, "tags": ["dummy"]
+		},
+		{
+			"title": "Bar", "bag": "Alpha", "recipe": null, "type": "None",
+			"revision": 1, "permissions": [],
+			"created": "20100712010000", "creator": "cdent",
+			"modified": "20100612105000", "modifier": "cdent",
+			"fields": {}, "tags": ["dummy"]
+		}
+	];
+
+	tiddlers = bag.tiddlers().parse(data);
+	strictEqual(tiddlers.length, 2);
+	strictEqual(tiddlers[0].title, "Foo");
+	strictEqual(tiddlers[0].bag.name, "Alpha");
+	strictEqual(tiddlers[0].bag.host, "http://example.com");
+	strictEqual(tiddlers[0].recipe, null);
+	strictEqual(tiddlers[1].title, "Bar");
+	strictEqual(tiddlers[1].bag.name, "Alpha");
+	strictEqual(tiddlers[1].bag.host, "http://example.com");
+	strictEqual(tiddlers[1].recipe, null);
 });
 
 test("Collection: Recipe Tiddlers", function() {
-	var recipe;
+	var recipe, tiddlers, data;
 
 	recipe = new tiddlyweb.Recipe("Omega", "http://example.com");
 	strictEqual(recipe.tiddlers()._type, "tiddlers");
 	strictEqual(recipe.tiddlers().container._type, "recipe");
 	strictEqual(recipe.tiddlers().route(), "http://example.com/recipes/Omega/tiddlers");
+
+	data = [
+		{
+			"title": "Foo", "bag": "Alpha", "recipe": "Omega", "type": "None",
+			"revision": 3, "permissions": [],
+			"created": "20100712000000", "creator": "fnd",
+			"modified": "20100612104500", "modifier": "fnd",
+			"fields": {}, "tags": ["dummy"]
+		},
+		{
+			"title": "Bar", "bag": "Bravo", "recipe": "Omega", "type": "None",
+			"revision": 1, "permissions": [],
+			"created": "20100712010000", "creator": "cdent",
+			"modified": "20100612105000", "modifier": "cdent",
+			"fields": {}, "tags": ["dummy"]
+		}
+	];
+
+	tiddlers = recipe.tiddlers().parse(data);
+	strictEqual(tiddlers.length, 2);
+	strictEqual(tiddlers[0].title, "Foo");
+	strictEqual(tiddlers[0].bag.name, "Alpha");
+	strictEqual(tiddlers[0].bag.host, "http://example.com");
+	strictEqual(tiddlers[0].recipe.name, "Omega");
+	strictEqual(tiddlers[0].recipe.host, "http://example.com");
+	strictEqual(tiddlers[1].title, "Bar");
+	strictEqual(tiddlers[1].bag.name, "Bravo");
+	strictEqual(tiddlers[1].bag.host, "http://example.com");
+	strictEqual(tiddlers[1].recipe.name, "Omega");
+	strictEqual(tiddlers[1].recipe.host, "http://example.com");
 });
 
 test("Collection: Tiddler Revisions", function() {
