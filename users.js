@@ -1,4 +1,5 @@
 // chrjs users extension
+// v0.4.0
 //
 // requires tiddlywebplugins.socialusers
 // http://pypi.python.org/pypi/tiddlywebplugins.socialusers
@@ -35,11 +36,12 @@ $.extend(tiddlyweb.User.prototype, {
 			}
 		});
 	},
-	setPassword: function(password, callback, errback) {
-		this.password = password;
+	setPassword: function(newPass, callback, errback) {
+		this.old_password = this.password; // XXX: should not use underscore (consistency)
+		this.password = newPass;
 		return this.put(callback, errback);
 	},
-	data: ["password"]
+	data: ["password", "old_password"]
 });
 
 })(jQuery);
