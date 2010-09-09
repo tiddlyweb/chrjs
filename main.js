@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.9.0
+// v0.9.1
 //
 // TODO:
 // * ensure all routes are supported
@@ -20,7 +20,7 @@ tiddlyweb = {
 		tiddlers : "{host}/{_type}s/{name}/tiddlers",
 		tiddler  : "{host}/{_type}s/{name}/tiddlers/{title}",
 		revisions: "{host}/{_type}s/{name}/tiddlers/{title}/revisions",
-		revision : "{host}/{_type}s/{name}/tiddlers/{title}/revisions/{id}",
+		revision : "{host}/{_type}s/{name}/tiddlers/{title}/revisions/{revision}",
 		search   : "{host}/search?q={query}"
 	}
 };
@@ -215,6 +215,20 @@ $.extend(tiddlyweb.Tiddler.prototype, {
 		return $.extend(tiddler, data);
 	},
 	data: ["created", "modified", "modifier", "tags", "fields", "text", "type"]
+});
+
+tiddlyweb.Revision = function(id, tiddler) {
+	var container = tiddler.bag || tiddler.recipe;
+	tiddlyweb.Tiddler.apply(this, [tiddler.title, container]);
+	this._type = "revision";
+	this.revision = id;
+};
+tiddlyweb.Revision.prototype = new tiddlyweb.Tiddler();
+$.extend(tiddlyweb.Revision.prototype, {
+	revisions: false,
+	data: false,
+	put: false,
+	"delete": false
 });
 
 tiddlyweb.Bag = function(name, host) {
