@@ -130,13 +130,20 @@ rev.get(callback, errback);
 	<h3>Retrieving Tiddlers from a Bag</h3>
 	<pre>
 var bag = new tiddlyweb.Bag("sandbox", host);
-bag.tid().get(callback, errback);
+bag.tiddlers().get(callback, errback);
 	</pre>
 
 	<h3>Retrieving Tiddlers from a Recipe</h3>
 	<pre>
 var recipe = new tiddlyweb.Recipe("sandbox", host);
-recipe.tid().get(callback, errback);
+recipe.tiddlers().get(callback, errback);
+	</pre>
+
+	<h3>Retrieving Tiddler Revisions</h3>
+	<pre>
+var tid = new tiddlyweb.Tiddler("Foo");
+tid.bag = new tiddlyweb.Bag("sandbox", host);
+tid.revisions().get(callback, errback);
 	</pre>
 
 	<h3>Retrieving the List of Bags</h3>
