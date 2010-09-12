@@ -95,7 +95,10 @@ $.extend(tiddlyweb.Resource.prototype, {
 		};
 		if(this.etag) {
 			if($.isFunction(this.etag)) { // IE
-				return this.etag.apply(this, arguments);
+				var _callback = function(resource, status, xhr) {
+					resource.put(callback, errback);
+				};
+				return this.etag(_callback, errback);
 			}
 			opts.beforeSend = function(xhr) {
 				xhr.setRequestHeader("If-Match", self.etag);
@@ -107,8 +110,19 @@ $.extend(tiddlyweb.Resource.prototype, {
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	"delete": function(callback, errback) {
-		var uri = this.route();
 		var self = this;
+		var uri = this.route();
+		if(this.etag) { // XXX: DRY (cf.  PUT)
+			if($.isFunction(this.etag)) { // IE
+				var _callback = function(resource, status, xhr) {
+					resource["delete"](callback, errback);
+				};
+				return this.etag(_callback, errback);
+			}
+			opts.beforeSend = function(xhr) {
+				xhr.setRequestHeader("If-Match", self.etag);
+			};
+		}
 		return $.ajax({
 			url: uri,
 			type: "DELETE",
