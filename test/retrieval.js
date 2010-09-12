@@ -3,8 +3,16 @@
 var _response, _status, _xhr, _error, _exc;
 var _ajax = $.ajax;
 
+var XHR = function(headers) {
+	this._headers = headers || {};
+};
+XHR.prototype.getResponseHeader = function(name) {
+	return this._headers[name.toLowerCase()];
+};
+
 module("retrieval", {
 	setup: function() {
+		_xhr = new XHR();
 		$.ajax = function(options) {
 			options.success && options.success(_response, _status, _xhr);
 			options.error && options.error(_xhr, _error, _exc);
@@ -19,6 +27,7 @@ module("retrieval", {
 test("Tiddler", function() {
 	var tiddler, _tiddler, _tiddler_orig;
 	var host = "localhost";
+
 	var callback = function(tiddler, status, xhr) {
 		_tiddler = tiddler;
 	};
@@ -152,6 +161,27 @@ test("Collection: Recipe Tiddlers", function() {
 
 test("Collection: Tiddler Revisions", function() {
 	// TODO
+});
+
+test("ETag", function() {
+	var tiddler, _tiddler;
+	var host = "localhost";
+	_xhr._headers.etag = '"..."';
+
+	var callback = function(tiddler, status, xhr) {
+		_tiddler = tiddler;
+	};
+	var errback = function(xhr, error, exc, tiddler) {};
+
+	_tiddler = null;
+	_response = {
+		bag: "Alpha"
+	};
+	tiddler = new tiddlyweb.Tiddler("Foo");
+	tiddler.bag = new tiddlyweb.Bag("Alpha", host);
+	tiddler.get(callback, errback);
+	strictEqual(tiddler.etag, undefined);
+	strictEqual(_tiddler.etag, '"..."');
 });
 
 })(jQuery);

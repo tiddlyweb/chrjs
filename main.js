@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.9.2
+// v0.10.0
 //
 // TODO:
 // * ensure all routes are supported
@@ -78,28 +78,20 @@ $.extend(tiddlyweb.Resource.prototype, {
 			type: "PUT",
 			contentType: "application/json",
 			data: $.toJSON(data),
-			success: function(resource, status, xhr) {
+			success: function(data, status, xhr) {
 				var etag = xhr.getResponseHeader("Etag");
 				if(etag) {
-					resource.etag = etag;
+					self.etag = etag;
+					callback(self, status, xhr);
 				} else { // IE
-					resource.etag = function(callback, errback) {
-						self.get(callback, errback);
-					};
+					self.get(callback, errback);
 				}
-				callback(resource, status, xhr);
 			},
 			error: function(xhr, error, exc) {
 				errback(xhr, error, exc, self);
 			}
 		};
 		if(this.etag) {
-			if($.isFunction(this.etag)) { // IE
-				var _callback = function(resource, status, xhr) {
-					resource.put(callback, errback);
-				};
-				return this.etag(_callback, errback);
-			}
 			opts.beforeSend = function(xhr) {
 				xhr.setRequestHeader("If-Match", self.etag);
 			};
@@ -110,19 +102,8 @@ $.extend(tiddlyweb.Resource.prototype, {
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	"delete": function(callback, errback) {
-		var self = this;
 		var uri = this.route();
-		if(this.etag) { // XXX: DRY (cf.  PUT)
-			if($.isFunction(this.etag)) { // IE
-				var _callback = function(resource, status, xhr) {
-					resource["delete"](callback, errback);
-				};
-				return this.etag(_callback, errback);
-			}
-			opts.beforeSend = function(xhr) {
-				xhr.setRequestHeader("If-Match", self.etag);
-			};
-		}
+		var self = this;
 		return $.ajax({
 			url: uri,
 			type: "DELETE",
