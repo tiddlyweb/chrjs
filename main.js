@@ -246,12 +246,13 @@ $.extend(tiddlyweb.Recipe.prototype, {
 });
 
 tiddlyweb.Policy = function(constraints) { // TODO: validation?
-	var attr = "read write create delete manage accept owner".split(" ");
 	var self = this;
-	$.each(attr, function(i, item) {
+	$.each(this.constraints, function(i, item) {
 		self[item] = constraints[item];
 	});
 };
+tiddlyweb.Policy.prototype.constraints = ["read", "write", "create", "delete",
+	"manage", "accept", "owner"];
 
 /*
  * utilities
