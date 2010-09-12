@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.9.1
+// v0.9.2
 //
 // TODO:
 // * ensure all routes are supported
@@ -52,6 +52,7 @@ $.extend(tiddlyweb.Resource.prototype, {
 			dataType: "json",
 			success: function(data, status, xhr) {
 				var resource = self.parse(data);
+				resource.etag = xhr.getResponseHeader("Etag");
 				callback(resource, status, xhr);
 			},
 			error: function(xhr, error, exc) {
@@ -63,25 +64,44 @@ $.extend(tiddlyweb.Resource.prototype, {
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	put: function(callback, errback) {
+		var self = this;
 		var uri = this.route();
 		var data = {};
-		var self = this;
 		$.each(this.data, function(i, item) {
 			var value = self[item];
 			if(value !== undefined) {
 				data[item] = value;
 			}
 		});
-		return $.ajax({
+		var opts = {
 			url: uri,
 			type: "PUT",
 			contentType: "application/json",
 			data: $.toJSON(data),
-			success: callback,
+			success: function(resource, status, xhr) {
+				var etag = xhr.getResponseHeader("Etag");
+				if(etag) {
+					resource.etag = etag;
+				} else { // IE
+					resource.etag = function(callback, errback) {
+						self.get(callback, errback);
+					};
+				}
+				callback(resource, status, xhr);
+			},
 			error: function(xhr, error, exc) {
 				errback(xhr, error, exc, self);
 			}
-		});
+		};
+		if(this.etag) {
+			if($.isFunction(this.etag)) { // IE
+				return this.etag.apply(this, arguments);
+			}
+			opts.beforeSend = function(xhr) {
+				xhr.setRequestHeader("If-Match", self.etag);
+			};
+		}
+		return $.ajax(opts);
 	},
 	// deletes resource on server
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
