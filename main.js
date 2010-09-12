@@ -1,9 +1,8 @@
 // TiddlyWeb adaptor
-// v0.9.1
+// v0.9.2
 //
 // TODO:
 // * ensure all routes are supported
-// * Policy class (attributes read, write, create, delete, manage, accept and owner)
 // * documentation
 
 (function($) {
@@ -126,6 +125,7 @@ $.extend(Container.prototype, {
 	parse: function(data) {
 		var type = tiddlyweb._capitalize(this._type);
 		var container = new tiddlyweb[type](this.name, this.host);
+		data.policy = new tiddlyweb.Policy(data.policy);
 		return $.extend(container, data);
 	},
 	data: ["desc", "policy"]
@@ -244,6 +244,14 @@ tiddlyweb.Recipe.prototype = new Container();
 $.extend(tiddlyweb.Recipe.prototype, {
 	data: ["recipe"].concat(Container.prototype.data)
 });
+
+tiddlyweb.Policy = function(constraints) { // TODO: validation?
+	var attr = "read write create delete manage accept owner".split(" ");
+	var self = this;
+	$.each(attr, function(i, item) {
+		self[item] = constraints[item];
+	});
+};
 
 /*
  * utilities

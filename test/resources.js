@@ -54,6 +54,20 @@ test("Bag", function() {
 	strictEqual(bag.route(), "{host}/bags/Charlie");
 	bag.host = "http://example.com";
 	strictEqual(bag.route(), "http://example.com/bags/Charlie");
+
+	bag = new tiddlyweb.Bag("Delta");
+	bag.policy = new tiddlyweb.Policy({
+		read: ["R:ADMIN"],
+		write: ["R:ADMIN"],
+		create: ["R:ADMIN"],
+		"delete": ["R:ADMIN"],
+		manage: ["R:ADMIN"],
+		accept: ["R:ADMIN"],
+		owner: "admin"
+	});
+	strictEqual(bag.policy.read[0], "R:ADMIN");
+	strictEqual(bag.policy.owner, "admin");
+	strictEqual(bag.policy instanceof tiddlyweb.Policy, true);
 });
 
 test("Recipe", function() {
@@ -74,6 +88,17 @@ test("Recipe", function() {
 	strictEqual(recipe.route(), "{host}/recipes/Chi");
 	recipe.host = "http://example.com";
 	strictEqual(recipe.route(), "http://example.com/recipes/Chi");
+
+	recipe = new tiddlyweb.Recipe("Phi");
+	recipe.policy = new tiddlyweb.Policy({
+		read: ["R:ADMIN"],
+		manage: ["R:ADMIN"],
+		owner: "admin"
+	});
+	strictEqual(recipe.policy.read[0], "R:ADMIN");
+	strictEqual(recipe.policy.owner, "admin");
+	strictEqual(recipe.policy.create, undefined);
+	strictEqual(recipe.policy instanceof tiddlyweb.Policy, true);
 });
 
 test("Collection: Bags", function() {

@@ -84,7 +84,7 @@ bag.get(callback, errback);
 	<pre>
 var bag = new tiddlyweb.Bag("sandbox", host);
 bag.desc = "lorem ipsum";
-bag.policy = {
+bag.policy = new tiddlyweb.Policy({
 	"read": [],
 	"write": ["ANY"],
 	"create": ["ANY"],
@@ -92,7 +92,7 @@ bag.policy = {
 	"manage": ["R:ADMIN"],
 	"accept": ["R:ADMIN"],
 	"owner": "administrator"
-};
+});
 bag.put(callback, errback);
 	</pre>
 
@@ -106,11 +106,11 @@ recipe.get(callback, errback);
 	<pre>
 var recipe = new tiddlyweb.Recipe("sandbox", host);
 recipe.desc = "lorem ipsum";
-recipe.policy = {
+recipe.policy = new tiddlyweb.Policy({
 	"read": [],
 	"manage": ["R:ADMIN"],
 	"owner": "administrator"
-};
+});
 recipe.recipe = [
 	["system", ""],
 	["sandbox", ""]

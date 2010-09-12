@@ -36,7 +36,7 @@ test("Tiddler", function() {
 	tiddler.fields = {
 		foo: "lorem",
 		bar: "ipsum"
-	}
+	};
 	tiddler.nonStandardAttribute = "...";
 	tiddler.put(callback, errback);
 	var keys = [];
@@ -65,7 +65,7 @@ test("Bag", function() {
 	_bag_orig = null;
 	bag = new tiddlyweb.Bag("Alpha", "http://example.org");
 	bag.desc = "lorem ipsum";
-	bag.policy = {
+	bag.policy = new tiddlyweb.Policy({
 		"read": [],
 		"write": ["ANY"],
 		"create": ["ANY"],
@@ -73,7 +73,7 @@ test("Bag", function() {
 		"manage": ["R:ADMIN"],
 		"accept": ["R:ADMIN"],
 		"owner": "administrator"
-	};
+	});
 	bag.nonStandardAttribute = "...";
 	bag.put(callback, errback);
 	var keys = [];
@@ -101,12 +101,12 @@ test("Recipe", function() {
 	_recipe_orig = null;
 	recipe = new tiddlyweb.Recipe("Omega", "http://example.com");
 	recipe.desc = "lorem ipsum";
-	recipe.policy = {
+	recipe.policy = new tiddlyweb.Policy({
 		"read": [],
 		"manage": ["R:ADMIN"],
 		"owner": "administrator"
-	};
-	recipe.recipe = [["foo", ""], ["bar", ""]]
+	});
+	recipe.recipe = [["foo", ""], ["bar", ""]];
 	recipe.nonStandardAttribute = "...";
 	recipe.put(callback, errback);
 	var keys = [];
