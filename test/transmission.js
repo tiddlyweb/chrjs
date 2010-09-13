@@ -9,13 +9,17 @@ var XHR = function(headers) {
 XHR.prototype.getResponseHeader = function(name) {
 	return this._headers[name.toLowerCase()];
 };
+XHR.prototype.setRequestHeader = function(name, value) {
+	this._headers[name.toLowerCase()] = value;
+};
 
 module("transmission", {
 	setup: function() {
 		_xhr = new XHR();
 		$.ajax = function(options) {
 			_ajaxParams = options;
-			var resource = $.evalJSON(options.data);
+			options.beforeSend && options.beforeSend(_xhr);
+			var resource = options.data ? $.evalJSON(options.data) : null;
 			options.success && options.success(resource, _status, _xhr);
 			options.error && options.error(_xhr, _error, _exc);
 			options.complete && options.complete(resource, _status, _xhr);
@@ -151,11 +155,39 @@ test("ETag", function() {
 
 	_data = null;
 	bag = new tiddlyweb.Bag("Alpha", "http://example.org");
+
 	tiddler = new tiddlyweb.Tiddler("Foo", bag);
 	tiddler.put(callback, errback);
-
+	strictEqual($.isFunction(_ajaxParams.beforeSend), false);
+	strictEqual(_xhr._headers["if-match"], undefined);
 	strictEqual(_data instanceof tiddlyweb.Tiddler, true);
 	strictEqual(_data.etag, '"..."');
+
+	delete _xhr._headers["if-match"];
+	tiddler = new tiddlyweb.Tiddler("Bar", bag);
+	tiddler.etag = '"~~~"';
+	tiddler.put(callback, errback);
+	strictEqual($.isFunction(_ajaxParams.beforeSend), true);
+	strictEqual(_xhr._headers["if-match"], '"~~~"');
+
+	delete _xhr._headers["if-match"];
+	tiddler = new tiddlyweb.Tiddler("Baz", bag);
+	tiddler.put(callback, errback);
+	strictEqual($.isFunction(_ajaxParams.beforeSend), false);
+	strictEqual(_xhr._headers["if-match"], undefined);
+
+	delete _xhr._headers["if-match"];
+	tiddler = new tiddlyweb.Tiddler("Baz", bag);
+	tiddler.etag = '"###"';
+	tiddler["delete"](callback, errback);
+	strictEqual($.isFunction(_ajaxParams.beforeSend), true);
+	strictEqual(_xhr._headers["if-match"], '"###"');
+
+	delete _xhr._headers["if-match"];
+	tiddler = new tiddlyweb.Tiddler("Baz", bag);
+	tiddler["delete"](callback, errback);
+	strictEqual($.isFunction(_ajaxParams.beforeSend), false);
+	strictEqual(_xhr._headers["if-match"], undefined);
 });
 
 test("Missing ETag (IE)", function() {

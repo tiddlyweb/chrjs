@@ -102,16 +102,22 @@ $.extend(tiddlyweb.Resource.prototype, {
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	"delete": function(callback, errback) {
-		var uri = this.route();
 		var self = this;
-		return $.ajax({
+		var uri = this.route();
+		var opts = {
 			url: uri,
 			type: "DELETE",
 			success: callback,
 			error: function(xhr, error, exc) {
 				errback(xhr, error, exc, self);
 			}
-		});
+		};
+		if(this.etag) { // XXX: DRY (cf. put method)
+			opts.beforeSend = function(xhr) {
+				xhr.setRequestHeader("If-Match", self.etag);
+			};
+		}
+		return $.ajax(opts);
 	},
 	// returns corresponding instance from raw JSON object (if applicable)
 	parse: function(data) {
