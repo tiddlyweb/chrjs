@@ -202,11 +202,13 @@ test("Missing ETag (IE)", function() {
 	bag = new tiddlyweb.Bag("Alpha", "http://example.com");
 	tiddler = new tiddlyweb.Tiddler("Foo", bag);
 	tiddler.get = function(callback, errback) {
-		_data = { etag: '"..."' };
-		callback(_data, "success", _xhr);
+		this.etag = '"..."';
+		callback(this, "success", _xhr);
 	};
+	strictEqual(tiddler.etag, undefined);
 	tiddler.put(callback, errback);
-	strictEqual(_data.etag, '"..."');
+	strictEqual(tiddler.etag, '"..."');
+	strictEqual(_data, tiddler);
 
 	_data = null;
 	bag = new tiddlyweb.Bag("Bravo", "http://example.org");
@@ -214,8 +216,10 @@ test("Missing ETag (IE)", function() {
 		_data = { etag: '"~~~"' };
 		callback(_data, "success", _xhr);
 	};
+	strictEqual(bag.etag, undefined);
 	bag.put(callback, errback);
-	strictEqual(_data.etag, '"~~~"');
+	strictEqual(bag.etag, undefined);
+	strictEqual(_data.etag, undefined);
 
 	_data = null;
 	recipe = new tiddlyweb.Recipe("Omega", "http://example.com");
@@ -223,8 +227,10 @@ test("Missing ETag (IE)", function() {
 		_data = { etag: '"###"' };
 		callback(_data, "success", _xhr);
 	};
+	strictEqual(recipe.etag, undefined);
 	recipe.put(callback, errback);
-	strictEqual(_data.etag, '"###"');
+	strictEqual(recipe.etag, undefined);
+	strictEqual(_data.etag, undefined);
 });
 
 })(jQuery);

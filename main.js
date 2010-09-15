@@ -64,60 +64,52 @@ $.extend(tiddlyweb.Resource.prototype, {
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	put: function(callback, errback) {
-		var self = this;
 		var uri = this.route();
 		var data = {};
+		var self = this;
 		$.each(this.data, function(i, item) {
 			var value = self[item];
 			if(value !== undefined) {
 				data[item] = value;
 			}
 		});
-		var opts = {
+		var options = {
 			url: uri,
 			type: "PUT",
 			contentType: "application/json",
 			data: $.toJSON(data),
 			success: function(data, status, xhr) {
-				var etag = xhr.getResponseHeader("Etag");
-				if(etag) {
-					self.etag = etag;
-					callback(self, status, xhr);
-				} else { // IE
-					self.get(callback, errback);
-				}
+				callback(self, status, xhr);
 			},
 			error: function(xhr, error, exc) {
 				errback(xhr, error, exc, self);
 			}
 		};
-		if(this.etag) {
-			opts.beforeSend = function(xhr) {
-				xhr.setRequestHeader("If-Match", self.etag);
-			};
+		if(this.ajaxSetup) {
+			this.ajaxSetup(options);
 		}
-		return $.ajax(opts);
+		return $.ajax(options);
 	},
 	// deletes resource on server
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	"delete": function(callback, errback) {
-		var self = this;
 		var uri = this.route();
-		var opts = {
+		var self = this;
+		var options = {
 			url: uri,
 			type: "DELETE",
-			success: callback,
+			success: function(data, status, xhr) {
+				callback(self, status, xhr);
+			},
 			error: function(xhr, error, exc) {
 				errback(xhr, error, exc, self);
 			}
 		};
-		if(this.etag) { // XXX: DRY (cf. put method)
-			opts.beforeSend = function(xhr) {
-				xhr.setRequestHeader("If-Match", self.etag);
-			};
+		if(this.ajaxSetup) {
+			this.ajaxSetup(options);
 		}
-		return $.ajax(opts);
+		return $.ajax(options);
 	},
 	// returns corresponding instance from raw JSON object (if applicable)
 	parse: function(data) {
@@ -235,7 +227,27 @@ $.extend(tiddlyweb.Tiddler.prototype, {
 		}
 		return $.extend(tiddler, data);
 	},
-	data: ["created", "modified", "modifier", "tags", "fields", "text", "type"]
+	data: ["created", "modified", "modifier", "tags", "fields", "text", "type"],
+	ajaxSetup: function(options) {
+		var self = this;
+		if(this.etag && (options.type == "PUT" || options.type == "DELETE")) {
+			options.beforeSend = function(xhr) {
+				xhr.setRequestHeader("If-Match", self.etag);
+			};
+		}
+		if(options.type == "PUT") {
+			var callback = options.success;
+			options.success = function(data, status, xhr) {
+				var etag = xhr.getResponseHeader("Etag");
+				if(etag) {
+					self.etag = etag;
+					callback(self, status, xhr);
+				} else { // IE
+					self.get(callback, options.error);
+				}
+			};
+		}
+	}
 });
 
 tiddlyweb.Revision = function(id, tiddler) {
