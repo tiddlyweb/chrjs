@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.9.2
+// v0.9.3
 //
 // TODO:
 // * ensure all routes are supported
@@ -214,7 +214,7 @@ $.extend(tiddlyweb.Tiddler.prototype, {
 		}
 		return $.extend(tiddler, data);
 	},
-	data: ["created", "modified", "modifier", "tags", "fields", "text", "type"]
+	data: ["modifier", "tags", "fields", "text", "type"]
 });
 
 tiddlyweb.Revision = function(id, tiddler) {
