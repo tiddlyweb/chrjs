@@ -44,7 +44,8 @@ test("Bag", function() {
 	strictEqual(bag.name, "Alpha");
 	strictEqual(bag.host, null);
 	strictEqual(bag.desc, "");
-	strictEqual(bag.policy, null);
+	strictEqual(bag.policy instanceof tiddlyweb.Policy, true);
+	strictEqual(bag.policy.read, undefined);
 
 	bag = new tiddlyweb.Bag("Bravo", "/~user/");
 	strictEqual(bag.host, "/~user");
@@ -77,7 +78,8 @@ test("Recipe", function() {
 	strictEqual(recipe.name, "Omega");
 	strictEqual(recipe.host, null);
 	strictEqual(recipe.desc, "");
-	strictEqual(recipe.policy, null);
+	strictEqual(recipe.policy instanceof tiddlyweb.Policy, true);
+	strictEqual(recipe.policy.read, undefined);
 	strictEqual(recipe.recipe.length, 0);
 
 	recipe = new tiddlyweb.Recipe("Psi", "example.com");

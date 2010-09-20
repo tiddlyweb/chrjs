@@ -28,7 +28,7 @@ tiddlyweb.Recipe.onChange = function(ev) {
 			recipe.recipe = $.map(lines, function(item, i) {
 				var arr = item.split("?");
 				var bag = arr.shift();
-				var filter = arr.join("?");
+				var filter = arr.join("?"); // NB: components expected to be URI-encoded
 				return [[bag, filter]]; // nested array prevents flattening
 			});
 			break;

@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.10.0
+// v0.10.1
 //
 // TODO:
 // * ensure all routes are supported
@@ -127,7 +127,8 @@ var Container = function(type, name, host) {
 		tiddlyweb.Resource.apply(this, [type, host]);
 		this.name = name;
 		this.desc = "";
-		this.policy = null;
+		this.policy = new tiddlyweb.Policy({});
+		this.policy.constraints = ["read", "manage", "owner"];
 	}
 };
 Container.prototype = new tiddlyweb.Resource();
