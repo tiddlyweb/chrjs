@@ -1,9 +1,13 @@
+// chrjs UI extension
+// v0.5.0
+
 (function($) {
 
 tiddlyweb.Recipe.prototype.render = function() {
 	var lbl = $("<h3 />");
 	$("<a />").attr("href", this.route()).text(this.name).appendTo(lbl);
 	var desc = $("<p />").text(this.desc);
+	this.policy.constraints = ["read", "manage", "owner"];
 	var policy = this.policy.render();
 	var content = $.map(this.recipe, function(item, i) {
 		return item[1] ? item[0] + "?" + item[1] : item[0];
