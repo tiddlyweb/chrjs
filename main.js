@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.10.1
+// v0.10.2
 //
 // TODO:
 // * ensure all routes are supported
@@ -222,6 +222,10 @@ $.extend(tiddlyweb.Tiddler.prototype, {
 		var container = this.bag || this.recipe;
 		tiddler.bag = new tiddlyweb.Bag(data.bag, container.host);
 		delete data.bag;
+		tiddler.created = convertTimestamp(data.created);
+		delete data.created;
+		tiddler.modified = convertTimestamp(data.modified);
+		delete data.modified;
 		if(this.recipe) {
 			tiddler.recipe = this.recipe;
 		}
@@ -293,6 +297,19 @@ tiddlyweb.Policy.prototype.constraints = ["read", "write", "create", "delete",
 
 tiddlyweb._capitalize = function(str) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+// convert YYYYMMDDhhmmss timestamp to Date instance
+var convertTimestamp = function(t) {
+	return new Date(Date.UTC(
+		parseInt(t.substr(0, 4), 10),
+		parseInt(t.substr(4, 2), 10) - 1,
+		parseInt(t.substr(6, 2), 10),
+		parseInt(t.substr(8, 2), 10),
+		parseInt(t.substr(10, 2), 10),
+		parseInt(t.substr(12, 2), 10),
+		parseInt(t.substr(14, 3) || "0", 10)
+	));
 };
 
 // adapted from Crockford (http://javascript.crockford.com/remedial.html)

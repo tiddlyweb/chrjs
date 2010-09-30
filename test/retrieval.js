@@ -38,7 +38,9 @@ test("Tiddler", function() {
 	_tiddler = null;
 	_tiddler_orig = null;
 	_response = {
-		bag: "Alpha"
+		bag: "Alpha",
+		created: "20100930104000",
+		modified: "20100930104130"
 	};
 	tiddler = new tiddlyweb.Tiddler("Foo");
 	tiddler.bag = new tiddlyweb.Bag("Alpha", host);
@@ -47,13 +49,24 @@ test("Tiddler", function() {
 	strictEqual(_tiddler.title, "Foo");
 	strictEqual(_tiddler.bag._type, "bag");
 	strictEqual(_tiddler.bag.name, "Alpha");
+	strictEqual(_tiddler.created instanceof Date, true);
+	strictEqual(_tiddler.modified instanceof Date, true);
+	strictEqual(_tiddler.modified.getUTCFullYear(), 2010);
+	strictEqual(_tiddler.modified.getUTCMonth(), 8);
+	strictEqual(_tiddler.modified.getUTCDate(), 30);
+	strictEqual(_tiddler.modified.getUTCHours(), 10);
+	strictEqual(_tiddler.modified.getUTCMinutes(), 41);
+	strictEqual(_tiddler.modified.getUTCSeconds(), 30);
+	strictEqual(_tiddler.modified.getUTCMilliseconds(), 0);
 	strictEqual(_tiddler.bag.host, "localhost");
 	strictEqual(_tiddler_orig, tiddler);
 
 	_tiddler = null;
 	_tiddler_orig = null;
 	_response = {
-		bag: "Bravo"
+		bag: "Bravo",
+		created: "00000000000000",
+		modified: "00000000000000"
 	};
 	tiddler = new tiddlyweb.Tiddler("Bar");
 	tiddler.recipe = new tiddlyweb.Recipe("Omega", host);
@@ -175,7 +188,9 @@ test("ETag", function() {
 
 	_tiddler = null;
 	_response = {
-		bag: "Alpha"
+		bag: "Alpha",
+		created: "00000000000000",
+		modified: "00000000000000"
 	};
 	tiddler = new tiddlyweb.Tiddler("Foo");
 	tiddler.bag = new tiddlyweb.Bag("Alpha", host);
