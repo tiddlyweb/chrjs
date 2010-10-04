@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.10.4
+// v0.10.5
 //
 // TODO:
 // * ensure all routes are supported
@@ -191,6 +191,23 @@ $.extend(TiddlerCollection.prototype, {
 			params = this.container;
 		}
 		return supplant(tiddlyweb.routes[this._type], params);
+	}
+});
+
+tiddlyweb.Search = function(query, host) {
+	tiddlyweb.Collection.apply(this, ["search", host]);
+	this.query = query;
+};
+tiddlyweb.Search.prototype = new tiddlyweb.Collection();
+$.extend(tiddlyweb.Search.prototype, {
+	parse: function(data) {
+		this.container = { // XXX: hacky
+			_type: "bag",
+			host: this.host
+		};
+		var tiddlers = TiddlerCollection.prototype.parse.apply(this, arguments);
+		delete this.container;
+		return tiddlers;
 	}
 });
 

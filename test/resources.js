@@ -207,6 +207,44 @@ test("Collection: Recipe Tiddlers", function() {
 	strictEqual(tiddlers[1].modified instanceof Date, true);
 });
 
+test("Collection: Search Tiddlers", function() {
+	var search, tiddlers, data;
+
+	search = new tiddlyweb.Search("lipsum", "http://example.com");
+	strictEqual(search._type, "search");
+	strictEqual(search.route(), "http://example.com/search?q=lipsum");
+
+	data = [
+		{
+			"title": "Foo", "bag": "Alpha", "recipe": "Omega", "type": "None",
+			"revision": 3, "permissions": [],
+			"created": "20100712000000", "creator": "fnd",
+			"modified": "20100612104500", "modifier": "fnd",
+			"fields": {}, "tags": ["dummy"]
+		},
+		{
+			"title": "Bar", "bag": "Bravo", "recipe": "Omega", "type": "None",
+			"revision": 1, "permissions": [],
+			"created": "20100712010000", "creator": "cdent",
+			"modified": "20100612105000", "modifier": "cdent",
+			"fields": {}, "tags": ["dummy"]
+		}
+	];
+
+	tiddlers = search.parse(data);
+	strictEqual(tiddlers.length, 2);
+	strictEqual(tiddlers[0].title, "Foo");
+	strictEqual(tiddlers[0].bag.name, "Alpha");
+	strictEqual(tiddlers[0].bag.host, "http://example.com");
+	strictEqual(tiddlers[0].created instanceof Date, true);
+	strictEqual(tiddlers[0].modified instanceof Date, true);
+	strictEqual(tiddlers[1].title, "Bar");
+	strictEqual(tiddlers[1].bag.name, "Bravo");
+	strictEqual(tiddlers[1].bag.host, "http://example.com");
+	strictEqual(tiddlers[1].created instanceof Date, true);
+	strictEqual(tiddlers[1].modified instanceof Date, true);
+});
+
 test("Collection: Tiddler Revisions", function() {
 	var tiddler;
 

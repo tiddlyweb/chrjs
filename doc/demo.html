@@ -141,8 +141,7 @@ recipe.tiddlers().get(callback, errback);
 
 	<h3>Retrieving Tiddlers from a Search</h3>
 	<pre>
-var search = new tiddlyweb.Collection("search", host);
-search.query = "lipsum";
+var search = new tiddlyweb.Search("lipsum", host);
 search.get(callback, errback);
 	</pre>
 
