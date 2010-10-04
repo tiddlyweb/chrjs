@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.10.2
+// v0.10.3
 //
 // TODO:
 // * ensure all routes are supported
@@ -317,7 +317,7 @@ var supplant = function(str, obj) {
 	return str.replace(/{([^{}]*)}/g, function (a, b) {
 		var r = obj[b];
 		r = typeof r === "string" || typeof r === "number" ? r : a;
-		return b == "host" ? r : encodeURIComponent(r); // XXX: special-casing
+		return $.inArray(b, ["host", "query"]) != -1 ? r : encodeURIComponent(r); // XXX: special-casing
 	});
 };
 
