@@ -196,11 +196,15 @@ test("Collection: Recipe Tiddlers", function() {
 	strictEqual(tiddlers[0].bag.host, "http://example.com");
 	strictEqual(tiddlers[0].recipe.name, "Omega");
 	strictEqual(tiddlers[0].recipe.host, "http://example.com");
+	strictEqual(tiddlers[0].created instanceof Date, true);
+	strictEqual(tiddlers[0].modified instanceof Date, true);
 	strictEqual(tiddlers[1].title, "Bar");
 	strictEqual(tiddlers[1].bag.name, "Bravo");
 	strictEqual(tiddlers[1].bag.host, "http://example.com");
 	strictEqual(tiddlers[1].recipe.name, "Omega");
 	strictEqual(tiddlers[1].recipe.host, "http://example.com");
+	strictEqual(tiddlers[1].created instanceof Date, true);
+	strictEqual(tiddlers[1].modified instanceof Date, true);
 });
 
 test("Collection: Tiddler Revisions", function() {

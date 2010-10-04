@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.10.3
+// v0.10.4
 //
 // TODO:
 // * ensure all routes are supported
@@ -27,7 +27,7 @@ tiddlyweb = {
 // host (optional) is the URI of the originating TiddlyWeb instance
 tiddlyweb.Resource = function(type, host) {
 	if(arguments.length) { // initialization
-		this._type = type; // XXX: somewhat redundant, as it generally corresponds to class name
+		this._type = type;
 		if(host !== false) {
 			this.host = host !== undefined ? host.replace(/\/$/, "") : null;
 		}
@@ -163,15 +163,18 @@ var TiddlerCollection = function(container, tiddler) {
 TiddlerCollection.prototype = new tiddlyweb.Collection();
 $.extend(TiddlerCollection.prototype, {
 	parse: function(data) {
-		var host = this.container.host;
-		return $.map(data, function(item, i) { // TODO: DRY (cf. Tiddler's parse method)
-			var tiddler = new tiddlyweb.Tiddler(item.title);
-			tiddler.bag = new tiddlyweb.Bag(item.bag, host);
-			delete item.bag;
-			if(item.recipe) {
-				tiddler.recipe = new tiddlyweb.Recipe(item.recipe, host);
-				delete item.recipe;
+		var container = this.container;
+		return $.map(data, function(item, i) {
+			var tiddler = new tiddlyweb.Tiddler(item.title, container);
+			var bag = item.bag;
+			tiddler = tiddlyweb.Tiddler.prototype.parse.apply(tiddler, [item]);
+			if(!tiddler.bag && bag) { // XXX: bag always present!?
+				tiddler.bag = new tiddlyweb.Bag(bag, container.host);
 			}
+			if(!tiddler.recipe && item.recipe) {
+				tiddler.recipe = new tiddlyweb.Recipe(item.recipe, container.host);
+			}
+			delete item.recipe;
 			return $.extend(tiddler, item);
 		});
 	},
@@ -222,6 +225,7 @@ $.extend(tiddlyweb.Tiddler.prototype, {
 		var container = this.bag || this.recipe;
 		tiddler.bag = new tiddlyweb.Bag(data.bag, container.host);
 		delete data.bag;
+		delete data.recipe;
 		tiddler.created = convertTimestamp(data.created);
 		delete data.created;
 		tiddler.modified = convertTimestamp(data.modified);
