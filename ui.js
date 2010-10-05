@@ -1,5 +1,5 @@
 // chrjs UI extension
-// v0.5.0
+// v0.5.1
 
 (function($) {
 
@@ -172,7 +172,7 @@ tiddlyweb.Policy.onChange = function(ev) {
 	var checked = $(el).attr("checked");
 	if($.inArray(entry, tiddlyweb.Policy.specialValues) == -1) {
 		if(!checked) {
-			removeItem(item, entries || []);
+			removeItem(entry, entries || []);
 		} else {
 			if(entries && entries.length) {
 				pushUnique(entry, policy[constraint]);
