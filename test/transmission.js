@@ -5,6 +5,7 @@ var _ajax = $.ajax;
 
 var XHR = function(headers) {
 	this._headers = headers || {};
+	this._headers.location = this._headers.location || "example.org";
 };
 XHR.prototype.getResponseHeader = function(name) {
 	return this._headers[name.toLowerCase()];
@@ -33,6 +34,7 @@ module("transmission", {
 test("Tiddler", function() {
 	var tiddler, bag, _data, _tiddler_orig;
 	_xhr._headers.etag = '"..."';
+	_xhr._headers.location = "http://example.com/bags/Bravo/tiddlers/Bar"
 
 	var callback = function(tiddler, status, xhr) {
 		_data = tiddler;
@@ -65,7 +67,16 @@ test("Tiddler", function() {
 	strictEqual(_data.text, "lorem ipsum");
 	strictEqual(_data.tags[1], "bar");
 	strictEqual(_data.fields.bar, "ipsum");
+	strictEqual(_data.bag.name, "Alpha");
 	strictEqual(_tiddler_orig, tiddler);
+
+	_data = null;
+	_tiddler_orig = null;
+	tiddler = new tiddlyweb.Tiddler("Bar");
+	tiddler.recipe = new tiddlyweb.Recipe("Omega", "http://example.com");
+	tiddler.put(callback, errback);
+
+	strictEqual(_data.bag.name, "Bravo");
 });
 
 test("Bag", function() {

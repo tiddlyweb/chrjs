@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.10.5
+// v0.10.6
 //
 // TODO:
 // * ensure all routes are supported
@@ -263,9 +263,14 @@ $.extend(tiddlyweb.Tiddler.prototype, {
 		if(options.type == "PUT") {
 			var callback = options.success;
 			options.success = function(data, status, xhr) {
+				var loc = xhr.getResponseHeader("Location");
 				var etag = xhr.getResponseHeader("Etag");
-				if(etag) {
+				if(loc && etag) {
 					self.etag = etag;
+					if(!self.bag) {
+						var bag = loc.split("/bags/").pop().split("/")[0];
+						self.bag = new tiddlyweb.Bag(bag, self.recipe.host);
+					}
 					callback(self, status, xhr);
 				} else { // IE
 					self.get(callback, options.error);
