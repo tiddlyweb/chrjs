@@ -34,7 +34,6 @@ module("transmission", {
 test("Tiddler", function() {
 	var tiddler, bag, _data, _tiddler_orig;
 	_xhr._headers.etag = '"..."';
-	_xhr._headers.location = "http://example.com/bags/Bravo/tiddlers/Bar"
 
 	var callback = function(tiddler, status, xhr) {
 		_data = tiddler;
@@ -72,6 +71,7 @@ test("Tiddler", function() {
 
 	_data = null;
 	_tiddler_orig = null;
+	_xhr._headers.location = "http://example.com/bags/prefix/bags/Bravo/tiddlers/Bar";
 	tiddler = new tiddlyweb.Tiddler("Bar");
 	tiddler.recipe = new tiddlyweb.Recipe("Omega", "http://example.com");
 	tiddler.put(callback, errback);
