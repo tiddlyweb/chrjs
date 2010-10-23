@@ -272,21 +272,22 @@ test("Collection: Tiddler Revisions", function() {
 
 test("timestamps", function() {
 	var bag = new tiddlyweb.Bag("Alpha", "http://example.com");
+	var json = {
+		"title": "Foo", "bag": bag.name, "recipe": null, "type": "None",
+		"revision": 1, "permissions": [],
+		"created": null, "creator": "fnd",
+		"modified": null, "modifier": "fnd",
+		"fields": {}, "tags": []
+	};
 	var data = [
-		{
-			"title": "Foo", "bag": bag.name, "recipe": null, "type": "None",
-			"revision": 3, "permissions": [],
-			"created": "20100712000010", "creator": "fnd",
-			"modified": "20100612104530", "modifier": "fnd",
-			"fields": {}, "tags": []
-		},
-		{
-			"title": "Bar", "bag": bag.name, "recipe": null, "type": "None",
-			"revision": 1, "permissions": [],
-			"created": "201007120100", "creator": "cdent",
-			"modified": "201006121050", "modifier": "cdent",
-			"fields": {}, "tags": ["dummy"]
-		}
+		$.extend({}, json, {
+			"created": "20101023121010",
+			"modified": "20101023121030"
+		}),
+		$.extend({}, json, {
+			"created": "201010231210",
+			"modified": "201010231210"
+		})
 	];
 	var tiddlers = bag.tiddlers().parse(data);
 
