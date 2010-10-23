@@ -269,3 +269,29 @@ test("Collection: Tiddler Revisions", function() {
 	tiddler.bag.host = "http://example.org";
 	strictEqual(tiddler.revisions().route(), "http://example.org/bags/Alpha/tiddlers/Foo/revisions");
 });
+
+test("timestamps", function() {
+	var bag = new tiddlyweb.Bag("Alpha", "http://example.com");
+	var data = [
+		{
+			"title": "Foo", "bag": bag.name, "recipe": null, "type": "None",
+			"revision": 3, "permissions": [],
+			"created": "20100712000010", "creator": "fnd",
+			"modified": "20100612104530", "modifier": "fnd",
+			"fields": {}, "tags": []
+		},
+		{
+			"title": "Bar", "bag": bag.name, "recipe": null, "type": "None",
+			"revision": 1, "permissions": [],
+			"created": "201007120100", "creator": "cdent",
+			"modified": "201006121050", "modifier": "cdent",
+			"fields": {}, "tags": ["dummy"]
+		}
+	];
+	var tiddlers = bag.tiddlers().parse(data);
+
+	strictEqual(tiddlers[0].created.getSeconds(), 10);
+	strictEqual(tiddlers[0].modified.getSeconds(), 30);
+	strictEqual(tiddlers[1].created.getSeconds(), 0);
+	strictEqual(tiddlers[1].modified.getSeconds(), 0);
+});

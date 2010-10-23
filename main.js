@@ -333,7 +333,7 @@ var convertTimestamp = function(t) {
 		parseInt(t.substr(6, 2), 10),
 		parseInt(t.substr(8, 2), 10),
 		parseInt(t.substr(10, 2), 10),
-		parseInt(t.substr(12, 2), 10),
+		parseInt(t.substr(12, 2) || "0", 10),
 		parseInt(t.substr(14, 3) || "0", 10)
 	));
 };
