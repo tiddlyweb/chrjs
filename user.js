@@ -6,52 +6,15 @@
 
 (function($) {
 
-    TiddlyWeb.User = function(username, password, host) {
-        this.username = username;
-        this.password = (password) ? password : '';
-        this.host = (host) ? host : '';
+    TiddlyWeb.routes.user = '{host}/{_type}s/{usersign}';
+
+    TiddlyWeb.User = function(usersign, host) {
+        TiddlyWeb.Resource.apply(this, ['user', host]);
+        this.usersign = usersign;
     };
-
+    TiddlyWeb.User.prototype = new TiddlyWeb.Resource();
     $.extend(TiddlyWeb.User.prototype, {
-        getURL: function(username) {
-            var usersign = (username) ? '/' + encodeURIComponent(username) : '';
-            return this.host + '/users' + usersign;
-        },
-        create: function(successCallback, errorCallback) {
-            var uri = this.getURL();
-            var userInfo = $.toJSON({
-                username: this.username,
-                password: this.password
-            });
-            
-            $.ajax({
-                url: uri,
-                type: 'POST',
-                contentType: 'application/json',
-                data: userInfo,
-                success: successCallback,
-                error: errorCallback
-            });
-        },
-        setPassword: function(password, successCallback, errorCallback) {
-            if (password) {
-                this.password = password;
-            }
-
-            var uri = this.getURL(this.username);
-            var userInfo = $.toJSON({
-                password: this.password
-            });
-
-            $.ajax({
-                url: uri,
-                type: 'PUT',
-                contentType: 'application/json',
-                data: userInfo,
-                success: successCallback,
-                error: errorCallback
-            });
-        }
+        data: ['password']
     });
 
 })(jQuery);
