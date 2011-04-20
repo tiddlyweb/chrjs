@@ -14,6 +14,6 @@ qunit:
 	mkdir -p test/qunit
 	curl -o "test/qunit/jquery.js" $(jquery_full)
 	curl -o "test/qunit/qunit.js" \
-		"http://github.com/jquery/qunit/raw/master/qunit/qunit.js"
+		"https://github.com/jquery/qunit/raw/master/qunit/qunit.js"
 	curl -o "test/qunit/qunit.css" \
-		"http://github.com/jquery/qunit/raw/master/qunit/qunit.css"
+		"https://github.com/jquery/qunit/raw/master/qunit/qunit.css"
