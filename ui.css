@@ -1,0 +1,45 @@
+.policy {
+	float: right;
+	margin: 10px;
+	border-collapse: collapse;
+}
+
+.policy,
+.policy thead,
+.policy th,
+.policy td {
+	border: 1px solid #AAA;
+	padding: 2px 5px;
+}
+
+.policy caption,
+.policy tr.special {
+	font-style: italic;
+}
+
+.policy caption {
+	text-align: left;
+}
+
+.policy thead,
+.policy thead th {
+	border-color: #000;
+}
+
+.policy thead {
+	color: #FFF;
+	background-color: #000;
+}
+
+.policy th {
+	padding: 2px 10px;
+}
+
+.policy tr:nth-child(even) {
+	background-color: #EEE;
+}
+
+.policy input[type="checkbox"] {
+	display: block;
+	margin: 0 auto;
+}

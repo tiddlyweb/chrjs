@@ -56,35 +56,35 @@
 
 	<h3>Retrieving a Tiddler</h3>
 	<pre>
-tiddler = new TiddlyWeb.Tiddler("Foo");
-tiddler.bag = new TiddlyWeb.Bag("sandbox", host);
-tiddler.get(callback, errback);
+var tid = new tiddlyweb.Tiddler("Foo");
+tid.bag = new tiddlyweb.Bag("sandbox", host);
+tid.get(callback, errback);
 	</pre>
 
 	<h3>Storing a Tiddler</h3>
 	<pre>
-tiddler = new TiddlyWeb.Tiddler("Foo");
-tiddler.bag = new TiddlyWeb.Bag("sandbox", host);
-tiddler.tags = ["foo", "bar", "baz"];
-tiddler.fields = {
+var tid = new tiddlyweb.Tiddler("Foo");
+tid.bag = new tiddlyweb.Bag("sandbox", host);
+tid.tags = ["foo", "bar", "baz"];
+tid.fields = {
 	foo: "lorem",
 	bar: "ipsum"
 };
-tiddler.text = "lorem ipsum\ndolor sit amet";
-tiddler.put(callback, errback);
+tid.text = "lorem ipsum\ndolor sit amet";
+tid.put(callback, errback);
 	</pre>
 
 	<h3>Retrieving a Bag</h3>
 	<pre>
-var bag = new TiddlyWeb.Bag("sandbox", host);
+var bag = new tiddlyweb.Bag("sandbox", host);
 bag.get(callback, errback);
 	</pre>
 
 	<h3>Storing a Bag</h3>
 	<pre>
-var bag = new TiddlyWeb.Bag("sandbox", host);
+var bag = new tiddlyweb.Bag("sandbox", host);
 bag.desc = "lorem ipsum";
-bag.policy = {
+bag.policy = $.extend(bag.policy, {
 	"read": [],
 	"write": ["ANY"],
 	"create": ["ANY"],
@@ -92,25 +92,25 @@ bag.policy = {
 	"manage": ["R:ADMIN"],
 	"accept": ["R:ADMIN"],
 	"owner": "administrator"
-};
+});
 bag.put(callback, errback);
 	</pre>
 
 	<h3>Retrieving a Recipe</h3>
 	<pre>
-var recipe = new TiddlyWeb.Recipe("sandbox", host);
+var recipe = new tiddlyweb.Recipe("sandbox", host);
 recipe.get(callback, errback);
 	</pre>
 
 	<h3>Storing a Recipe</h3>
 	<pre>
-var recipe = new TiddlyWeb.Recipe("sandbox", host);
+var recipe = new tiddlyweb.Recipe("sandbox", host);
 recipe.desc = "lorem ipsum";
-recipe.policy = {
+recipe.policy = $.extend(recipe.policy, {
 	"read": [],
 	"manage": ["R:ADMIN"],
 	"owner": "administrator"
-};
+});
 recipe.recipe = [
 	["system", ""],
 	["sandbox", ""]
@@ -118,27 +118,49 @@ recipe.recipe = [
 recipe.put(callback, errback);
 	</pre>
 
+	<h3>Retrieving a Tiddler Revision</h3>
+	<pre>
+var tid = new tiddlyweb.Tiddler("Foo");
+tid.bag = new tiddlyweb.Bag("sandbox", host);
+
+var rev = new tiddlyweb.Revision(2145, tid);
+rev.get(callback, errback);
+	</pre>
+
 	<h3>Retrieving Tiddlers from a Bag</h3>
 	<pre>
-var bag = new TiddlyWeb.Bag("sandbox", host);
+var bag = new tiddlyweb.Bag("sandbox", host);
 bag.tiddlers().get(callback, errback);
 	</pre>
 
 	<h3>Retrieving Tiddlers from a Recipe</h3>
 	<pre>
-var recipe = new TiddlyWeb.Recipe("sandbox", host);
+var recipe = new tiddlyweb.Recipe("sandbox", host);
 recipe.tiddlers().get(callback, errback);
+	</pre>
+
+	<h3>Retrieving Tiddlers from a Search</h3>
+	<pre>
+var search = new tiddlyweb.Search("lipsum", host);
+search.get(callback, errback);
+	</pre>
+
+	<h3>Retrieving Tiddler Revisions</h3>
+	<pre>
+var tid = new tiddlyweb.Tiddler("Foo");
+tid.bag = new tiddlyweb.Bag("sandbox", host);
+tid.revisions().get(callback, errback);
 	</pre>
 
 	<h3>Retrieving the List of Bags</h3>
 	<pre>
-var bags = new TiddlyWeb.Collection("bags", host);
+var bags = new tiddlyweb.Collection("bags", host);
 bags.get(callback, errback);
 	</pre>
 
 	<h3>Retrieving the List of Recipes</h3>
 	<pre>
-var recipes = new TiddlyWeb.Collection("recipes", host);
+var recipes = new tiddlyweb.Collection("recipes", host);
 recipes.get(callback, errback);
 	</pre>
 
