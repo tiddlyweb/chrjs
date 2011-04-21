@@ -297,7 +297,7 @@ test("timestamps", function() {
 	strictEqual(tiddlers[1].modified.getSeconds(), 0);
 });
 
-test("JSON", function() {
+test("JSON representation", function() {
 	var tiddler = new tiddlyweb.Tiddler("Foo");
 	tiddler.text = "Bar";
 	var json = tiddler.toJSON();

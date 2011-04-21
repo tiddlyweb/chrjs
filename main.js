@@ -59,32 +59,17 @@ $.extend(tiddlyweb.Resource.prototype, {
 			}
 		});
 	},
-	// creates JSON out of a resource
-	// returns the JSON
-	toJSON: function() {
-		var data = {},
-			self = this;
-		$.each(this.data, function(i, item) {
-			var value = self[item];
-			if(value !== undefined) {
-				data[item] = value;
-			}
-		});
-
-		return $.toJSON(data);
-	},
 	// sends resource to server
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	put: function(callback, errback) {
 		var self = this;
 		var uri = this.route();
-		var data = this.toJSON();
 		var options = {
 			url: uri,
 			type: "PUT",
 			contentType: "application/json",
-			data: data,
+			data: this.toJSON(),
 			success: function(data, status, xhr) {
 				callback(self, status, xhr);
 			},
@@ -117,6 +102,18 @@ $.extend(tiddlyweb.Resource.prototype, {
 			this.ajaxSetup(options);
 		}
 		return $.ajax(options);
+	},
+	// returns the JSON representation of a resource
+	toJSON: function() {
+		var data = {},
+			self = this;
+		$.each(this.data, function(i, item) {
+			var value = self[item];
+			if(value !== undefined) {
+				data[item] = value;
+			}
+		});
+		return $.toJSON(data);
 	},
 	// returns corresponding instance from raw JSON object (if applicable)
 	parse: function(data) {
