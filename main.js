@@ -63,8 +63,8 @@ $.extend(tiddlyweb.Resource.prototype, {
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	put: function(callback, errback) {
-		var self = this;
-		var uri = this.route();
+		var self = this,
+			uri = this.route();
 		var options = {
 			url: uri,
 			type: "PUT",
@@ -86,8 +86,8 @@ $.extend(tiddlyweb.Resource.prototype, {
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	"delete": function(callback, errback) {
-		var self = this;
-		var uri = this.route();
+		var self = this,
+			uri = this.route();
 		var options = {
 			url: uri,
 			type: "DELETE",
@@ -141,8 +141,8 @@ $.extend(Container.prototype, {
 		return new TiddlerCollection(this);
 	},
 	parse: function(data) {
-		var type = tiddlyweb._capitalize(this._type);
-		var container = new tiddlyweb[type](this.name, this.host);
+		var type = tiddlyweb._capitalize(this._type),
+			container = new tiddlyweb[type](this.name, this.host);
 		data.policy = new tiddlyweb.Policy(data.policy);
 		return $.extend(container, data);
 	},
@@ -170,8 +170,8 @@ $.extend(TiddlerCollection.prototype, {
 	parse: function(data) {
 		var container = this.container;
 		return $.map(data, function(item, i) {
-			var tiddler = new tiddlyweb.Tiddler(item.title, container);
-			var bag = item.bag;
+			var tiddler = new tiddlyweb.Tiddler(item.title, container),
+				bag = item.bag;
 			tiddler = tiddlyweb.Tiddler.prototype.parse.apply(tiddler, [item]);
 			if(!tiddler.bag && bag) { // XXX: bag always present!?
 				tiddler.bag = new tiddlyweb.Bag(bag, container.host);
@@ -243,8 +243,8 @@ $.extend(tiddlyweb.Tiddler.prototype, {
 		return supplant(tiddlyweb.routes[this._type], params);
 	},
 	parse: function(data) {
-		var tiddler = new tiddlyweb.Tiddler(this.title);
-		var container = this.bag || this.recipe;
+		var tiddler = new tiddlyweb.Tiddler(this.title),
+			container = this.bag || this.recipe;
 		tiddler.bag = new tiddlyweb.Bag(data.bag, container.host);
 		delete data.bag;
 		delete data.recipe;
@@ -268,8 +268,8 @@ $.extend(tiddlyweb.Tiddler.prototype, {
 		if(options.type == "PUT") {
 			var callback = options.success;
 			options.success = function(data, status, xhr) {
-				var loc = xhr.getResponseHeader("Location");
-				var etag = xhr.getResponseHeader("Etag");
+				var loc = xhr.getResponseHeader("Location"),
+					etag = xhr.getResponseHeader("Etag");
 				if(loc && etag) {
 					self.etag = etag;
 					if(!self.bag) {
