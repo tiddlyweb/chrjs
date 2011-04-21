@@ -5,6 +5,9 @@
 // * ensure all routes are supported
 // * documentation
 
+/*jslint nomen: false */
+/*global jQuery, tiddlyweb */
+
 (function($) {
 
 tiddlyweb = {
@@ -41,7 +44,7 @@ $.extend(tiddlyweb.Resource.prototype, {
 	get: function(callback, errback, filters) {
 		var uri = this.route();
 		if(filters) {
-			var separator = uri.indexOf("?") == -1 ? "?" : ";";
+			var separator = uri.indexOf("?") === -1 ? "?" : ";";
 			uri += separator + filters;
 		}
 		var self = this;
@@ -184,16 +187,15 @@ $.extend(TiddlerCollection.prototype, {
 		});
 	},
 	route: function() {
+		var params = this.container;
 		if(this.tiddler) {
 			var container = this.tiddler.bag || this.tiddler.recipe;
-			var params = {
+			params = {
 				_type: container._type,
 				host: container.host,
 				name: container.name,
 				title: this.tiddler.title
 			};
-		} else {
-			params = this.container;
 		}
 		return supplant(tiddlyweb.routes[this._type], params);
 	}
@@ -221,8 +223,8 @@ $.extend(tiddlyweb.Search.prototype, {
 tiddlyweb.Tiddler = function(title, container) {
 	tiddlyweb.Resource.apply(this, ["tiddler", false]);
 	this.title = title;
-	this.bag = container && container._type == "bag" ? container : null;
-	this.recipe = container && container._type == "recipe" ? container : null;
+	this.bag = container && container._type === "bag" ? container : null;
+	this.recipe = container && container._type === "recipe" ? container : null;
 	var self = this;
 	$.each(this.data, function(i, item) {
 		self[item] = undefined; // exposes list of standard attributes for inspectability
@@ -260,12 +262,12 @@ $.extend(tiddlyweb.Tiddler.prototype, {
 	data: ["modifier", "tags", "fields", "text", "type"],
 	ajaxSetup: function(options) {
 		var self = this;
-		if(this.etag && (options.type == "PUT" || options.type == "DELETE")) {
+		if(this.etag && (options.type === "PUT" || options.type === "DELETE")) {
 			options.beforeSend = function(xhr) {
 				xhr.setRequestHeader("If-Match", self.etag);
 			};
 		}
-		if(options.type == "PUT") {
+		if(options.type === "PUT") {
 			var callback = options.success;
 			options.success = function(data, status, xhr) {
 				var loc = xhr.getResponseHeader("Location"),
@@ -348,8 +350,8 @@ var supplant = function(str, obj) {
 	return str.replace(/{([^{}]*)}/g, function (a, b) {
 		var r = obj[b];
 		r = typeof r === "string" || typeof r === "number" ? r : a;
-		return $.inArray(b, ["host", "query"]) != -1 ? r : encodeURIComponent(r); // XXX: special-casing
+		return $.inArray(b, ["host", "query"]) !== -1 ? r : encodeURIComponent(r); // XXX: special-casing
 	});
 };
 
-})(jQuery);
+}(jQuery));
