@@ -25,10 +25,10 @@ tiddlyweb.Recipe.onChange = function(ev) {
 	var recipe = el.closest("article").data("entity");
 	switch(this.nodeName.toLowerCase()) {
 		case "p": // TODO: enforce single line
-			recipe.desc = el.text();
+			recipe.desc = el.text().trim();
 			break;
 		case "pre":
-			var lines = el.html().split("\n");
+			var lines = el.html().trim().split("\n");
 			recipe.recipe = $.map(lines, function(item, i) {
 				var arr = item.split("?");
 				var bag = arr.shift();
@@ -169,9 +169,8 @@ tiddlyweb.Policy.onChange = function(ev) {
 	var constraint = table.find("thead th").eq(colIndex).text(); // XXX: brittle (i18n)
 	var entries = policy[constraint];
 
-	var checked = $(el).attr("checked");
 	if($.inArray(entry, tiddlyweb.Policy.specialValues) == -1) {
-		if(!checked) {
+		if(!this.checked) {
 			removeItem(entry, entries || []);
 		} else {
 			if(entries && entries.length) {
