@@ -40,7 +40,7 @@ $.extend(tiddlyweb.Resource.prototype, {
 	// retrieves resource from server
 	// callback is passed resource, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
-	// filters is a filter string (e.g. "select=tag:foo;limit=5")
+	// filters is an optional filter string (e.g. "select=tag:foo;limit=5")
 	get: function(callback, errback, filters) {
 		var uri = this.route();
 		if(filters) {
