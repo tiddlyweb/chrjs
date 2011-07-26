@@ -5,10 +5,12 @@
 // * ensure all routes are supported
 // * documentation
 
-/*jslint nomen: false */
+/*jslint vars: true, unparam: true, nomen: true */
 /*global jQuery, tiddlyweb */
 
 (function($) {
+
+"use strict";
 
 tiddlyweb = {
 	routes: {
@@ -26,6 +28,8 @@ tiddlyweb = {
 		search   : "{host}/search?q={query}"
 	}
 };
+
+var TiddlerCollection, convertTimestamp, supplant;
 
 // host (optional) is the URI of the originating TiddlyWeb instance
 tiddlyweb.Resource = function(type, host) {
@@ -161,7 +165,7 @@ tiddlyweb.Collection = function(type, host, attribs) {
 };
 tiddlyweb.Collection.prototype = new tiddlyweb.Resource();
 
-var TiddlerCollection = function(container, tiddler) {
+TiddlerCollection = function(container, tiddler) {
 	if(arguments.length) { // initialization
 		tiddlyweb.Collection.apply(this, [tiddler ? "revisions" : "tiddlers"]);
 		this.container = container || null;
@@ -337,7 +341,7 @@ tiddlyweb._capitalize = function(str) {
 };
 
 // convert YYYYMMDDhhmmss timestamp to Date instance
-var convertTimestamp = function(t) {
+convertTimestamp = function(t) {
 	return new Date(Date.UTC(
 		parseInt(t.substr(0, 4), 10),
 		parseInt(t.substr(4, 2), 10) - 1,
@@ -350,7 +354,7 @@ var convertTimestamp = function(t) {
 };
 
 // adapted from Crockford (http://javascript.crockford.com/remedial.html)
-var supplant = function(str, obj) {
+supplant = function(str, obj) {
 	return str.replace(/{([^{}]*)}/g, function (a, b) {
 		var r = obj[b];
 		r = typeof r === "string" || typeof r === "number" ? r : a;
