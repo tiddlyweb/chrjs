@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.10.6
+// v0.11.0
 //
 // TODO:
 // * ensure all routes are supported
@@ -220,6 +220,7 @@ $.extend(tiddlyweb.Search.prototype, {
 
 // title is the name of the tiddler
 // container (optional) is an instance of either Bag or Recipe
+// optionally accepts a single object representing tiddler attributes
 tiddlyweb.Tiddler = function(title, container) {
 	tiddlyweb.Resource.apply(this, ["tiddler", false]);
 	this.title = title;
@@ -229,6 +230,9 @@ tiddlyweb.Tiddler = function(title, container) {
 	$.each(this.data, function(i, item) {
 		self[item] = undefined; // exposes list of standard attributes for inspectability
 	});
+	if(title && title.title) { // title is an object of tiddler attributes
+		$.extend(this, title);
+	}
 };
 tiddlyweb.Tiddler.prototype = new tiddlyweb.Resource();
 $.extend(tiddlyweb.Tiddler.prototype, {

@@ -35,6 +35,31 @@ test("Tiddler", function() {
 	tiddler = new tiddlyweb.Tiddler("foo/bar");
 	tiddler.bag = new tiddlyweb.Bag("alpha/bravo", "http://example.org/wiki/");
 	strictEqual(tiddler.route(), "http://example.org/wiki/bags/alpha%2Fbravo/tiddlers/foo%2Fbar");
+
+	var tags = ["foo", "bar", "baz"];
+	var fields = {
+		custom: "..."
+	};
+	tiddler = new tiddlyweb.Tiddler({
+		title: "Foo",
+		bag: new tiddlyweb.Bag("Alpha", "/"),
+		recipe: new tiddlyweb.Recipe("Omega", "/"),
+		created: new Date(),
+		creator: "FND",
+		modified: new Date(),
+		modifier: "cdent",
+		tags: tags,
+		type: "text/plain",
+		text: "lorem ipsum\ndolor sit amet",
+		fields: fields
+	});
+	strictEqual(tiddler.title, "Foo");
+	strictEqual(tiddler.bag.name, "Alpha");
+	strictEqual(tiddler.recipe.name, "Omega");
+	strictEqual(tiddler.type, "text/plain");
+	strictEqual(tiddler.tags, tags); // NB: not a copy!
+	strictEqual(tiddler.fields, fields); // NB: not a copy!
+	strictEqual(tiddler.route(), "/bags/Alpha/tiddlers/Foo");
 });
 
 test("Bag", function() {
