@@ -267,7 +267,8 @@ $.extend(tw.Tiddler.prototype, {
 		}
 		return $.extend(tiddler, data);
 	},
-	data: ["modifier", "tags", "fields", "text", "type"],
+	data: ["created", "creator", "modifier", "modified", "tags", "type", "text",
+			"fields"],
 	ajaxSetup: function(options) {
 		var self = this;
 		if(this.etag && (options.type === "PUT" || options.type === "DELETE")) {
