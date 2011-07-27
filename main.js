@@ -29,7 +29,7 @@ var tw = {
 	}
 };
 
-var TiddlerCollection, convertTimestamp, supplant;
+var convertTimestamp, supplant;
 
 // host (optional) is the URI of the originating TiddlyWeb instance
 tw.Resource = function(type, host) {
@@ -145,7 +145,7 @@ var Container = function(type, name, host) {
 Container.prototype = new tw.Resource();
 $.extend(Container.prototype, {
 	tiddlers: function() {
-		return new TiddlerCollection(this);
+		return new tw.TiddlerCollection(this);
 	},
 	parse: function(data) {
 		var type = tw._capitalize(this._type),
@@ -165,15 +165,15 @@ tw.Collection = function(type, host, attribs) {
 };
 tw.Collection.prototype = new tw.Resource();
 
-TiddlerCollection = function(container, tiddler) {
+tw.TiddlerCollection = function(container, tiddler) {
 	if(arguments.length) { // initialization
 		tw.Collection.apply(this, [tiddler ? "revisions" : "tiddlers"]);
 		this.container = container || null;
 		this.tiddler = tiddler || null;
 	}
 };
-TiddlerCollection.prototype = new tw.Collection();
-$.extend(TiddlerCollection.prototype, {
+tw.TiddlerCollection.prototype = new tw.Collection();
+$.extend(tw.TiddlerCollection.prototype, {
 	parse: function(data) {
 		var container = this.container;
 		return $.map(data, function(item, i) {
@@ -216,7 +216,7 @@ $.extend(tw.Search.prototype, {
 			_type: "bag",
 			host: this.host
 		};
-		var tiddlers = TiddlerCollection.prototype.parse.apply(this, arguments);
+		var tiddlers = tw.TiddlerCollection.prototype.parse.apply(this, arguments);
 		delete this.container;
 		return tiddlers;
 	}
@@ -241,7 +241,7 @@ tw.Tiddler = function(title, container) {
 tw.Tiddler.prototype = new tw.Resource();
 $.extend(tw.Tiddler.prototype, {
 	revisions: function() {
-		return new TiddlerCollection(this.bag || this.recipe, this);
+		return new tw.TiddlerCollection(this.bag || this.recipe, this);
 	},
 	route: function() {
 		var container = this.bag || this.recipe;
