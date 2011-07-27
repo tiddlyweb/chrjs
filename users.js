@@ -7,20 +7,20 @@
 /*jslint vars: true */
 /*global jQuery, tiddlyweb */
 
-(function($) {
+(function($, tw) {
 
 "use strict";
 
-tiddlyweb.routes.users = "{host}/users";
-tiddlyweb.routes.user = "{host}/users/{username}";
+tw.routes.users = "{host}/users";
+tw.routes.user = "{host}/users/{username}";
 
-tiddlyweb.User = function(username, password, host) {
-	tiddlyweb.Resource.apply(this, ["user", host]);
+tw.User = function(username, password, host) {
+	tw.Resource.apply(this, ["user", host]);
 	this.username = username;
 	this.password = password;
 };
-tiddlyweb.User.prototype = new tiddlyweb.Resource();
-$.extend(tiddlyweb.User.prototype, {
+tw.User.prototype = new tw.Resource();
+$.extend(tw.User.prototype, {
 	create: function(callback, errback) {
 		var uri = this.route().split("/"); // XXX: hacky!?
 		uri.pop();
@@ -49,4 +49,4 @@ $.extend(tiddlyweb.User.prototype, {
 	data: ["password", "old_password"]
 });
 
-}(jQuery));
+}(jQuery, tiddlyweb));
