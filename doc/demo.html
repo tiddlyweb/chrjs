@@ -174,7 +174,7 @@ recipes.get(callback, errback);
 			$("#notify").slideUp("fast", function() {
 				$(this).remove();
 				$('<div id="notify" />').text(msg).
-					append("<pre>" + $.toJSON(data) + "</pre>"). // TODO: use pretty-print library
+					append("<pre>" + JSON.stringify(data) + "</pre>"). // TODO: use pretty-print library
 					hide().
 					insertAfter(el).
 					slideDown();

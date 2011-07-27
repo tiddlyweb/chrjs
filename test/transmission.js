@@ -20,7 +20,7 @@ module("transmission", {
 		$.ajax = function(options) {
 			_ajaxParams = options;
 			options.beforeSend && options.beforeSend(_xhr);
-			var resource = options.data ? $.evalJSON(options.data) : null;
+			var resource = options.data ? JSON.parse(options.data) : null;
 			options.success && options.success(resource, _status, _xhr);
 			options.error && options.error(_xhr, _error, _exc);
 			options.complete && options.complete(resource, _status, _xhr);
@@ -55,7 +55,7 @@ test("Tiddler", function() {
 	tiddler.nonStandardAttribute = "...";
 	tiddler.put(callback, errback);
 
-	var payload = $.evalJSON(_ajaxParams.data);
+	var payload = JSON.parse(_ajaxParams.data);
 	var attribs = [];
 	for(var key in payload) {
 		attribs.push(key);
@@ -105,7 +105,7 @@ test("Bag", function() {
 	});
 	bag.nonStandardAttribute = "...";
 	bag.put(callback, errback);
-	var payload = $.evalJSON(_ajaxParams.data);
+	var payload = JSON.parse(_ajaxParams.data);
 	var attribs = [];
 	for(var key in payload) {
 		attribs.push(key);
@@ -141,7 +141,7 @@ test("Recipe", function() {
 	recipe.recipe = [["foo", ""], ["bar", ""]];
 	recipe.nonStandardAttribute = "...";
 	recipe.put(callback, errback);
-	var payload = $.evalJSON(_ajaxParams.data);
+	var payload = JSON.parse(_ajaxParams.data);
 	var attribs = [];
 	for(var key in payload) {
 		attribs.push(key);

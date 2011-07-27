@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.11.0
+// v0.12.0
 //
 // TODO:
 // * ensure all routes are supported
@@ -120,7 +120,7 @@ $.extend(tw.Resource.prototype, {
 				data[item] = value;
 			}
 		});
-		return $.toJSON(data);
+		return JSON.stringify(data);
 	},
 	// returns corresponding instance from raw JSON object (if applicable)
 	parse: function(data) {

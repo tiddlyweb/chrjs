@@ -1,5 +1,5 @@
 // chrjs users extension
-// v0.4.0
+// v0.5.0
 //
 // requires tiddlywebplugins.socialusers
 // http://pypi.python.org/pypi/tiddlywebplugins.socialusers
@@ -29,7 +29,7 @@ $.extend(tiddlyweb.User.prototype, {
 			url: uri,
 			type: "POST",
 			contentType: "application/json",
-			data: $.toJSON(data),
+			data: JSON.stringify(data),
 			success: callback,
 			error: function(xhr, error, exc) {
 				errback(xhr, error, exc, self);

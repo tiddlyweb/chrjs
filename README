@@ -8,4 +8,4 @@ Licensed under the same terms as TiddlyWeb itself (BSD).
 
 Dependencies:
 * jQuery (http://jquery.com)
-* jquery-json (http://code.google.com/p/jquery-json/)
+* json2 (https://github.com/douglascrockford/JSON-js) for legacy browsers
