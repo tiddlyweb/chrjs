@@ -4,7 +4,12 @@
 // requires tiddlywebplugins.socialusers
 // http://pypi.python.org/pypi/tiddlywebplugins.socialusers
 
+/*jslint vars: true */
+/*global jQuery, tiddlyweb */
+
 (function($) {
+
+"use strict";
 
 tiddlyweb.routes.users = "{host}/users";
 tiddlyweb.routes.user = "{host}/users/{username}";
@@ -44,4 +49,4 @@ $.extend(tiddlyweb.User.prototype, {
 	data: ["password", "old_password"]
 });
 
-})(jQuery);
+}(jQuery));
