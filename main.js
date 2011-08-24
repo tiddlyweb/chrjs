@@ -1,9 +1,5 @@
 // TiddlyWeb adaptor
-// v0.12.0
-//
-// TODO:
-// * ensure all routes are supported
-// * documentation
+// v0.13.0
 
 /*jslint vars: true, unparam: true, nomen: true */
 /*global jQuery */
@@ -251,6 +247,26 @@ $.extend(tw.Tiddler.prototype, {
 			name: container ? container.name : null
 		});
 		return supplant(tw.routes[this._type], params);
+	},
+	toJSON: function() { // XXX: largely duplicates parent's toJSON
+		var data = { title: this.title },
+			self = this;
+		$.each(this.data, function(i, item) {
+			var value = self[item];
+			if(value !== undefined) {
+				data[item] = value;
+			}
+		});
+		$.each(["bag", "recipe"], function(i, type) {
+			var container = self[type];
+			if(container) {
+				data[type] = {
+					name: container.name,
+					host: container.host
+				};
+			}
+		});
+		return JSON.stringify(data);
 	},
 	parse: function(data) {
 		var tiddler = new tw.Tiddler(this.title),
