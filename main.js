@@ -1,7 +1,7 @@
 // TiddlyWeb adaptor
 // v0.14.0
 
-/*jslint vars: true, unparam: true, nomen: true */
+/*jslint vars: true, unparam: true, nomen: true, white: true */
 /*global jQuery */
 
 var tiddlyweb = (function($) {
@@ -66,10 +66,9 @@ $.extend(tw.Resource.prototype, {
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	put: function(callback, errback) {
-		var self = this,
-			uri = this.route();
+		var self = this;
 		var options = {
-			url: uri,
+			url: this.route(),
 			type: "PUT",
 			contentType: "application/json",
 			data: JSON.stringify(this.baseData()),
@@ -89,10 +88,9 @@ $.extend(tw.Resource.prototype, {
 	// callback is passed data, status, XHR (cf. jQuery.ajax success)
 	// errback is passed XHR, error, exception, resource (cf. jQuery.ajax error)
 	"delete": function(callback, errback) {
-		var self = this,
-			uri = this.route();
+		var self = this;
 		var options = {
-			url: uri,
+			url: this.route(),
 			type: "DELETE",
 			success: function(data, status, xhr) {
 				callback(self, status, xhr);
