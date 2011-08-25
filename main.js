@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.14.0
+// v0.14.1
 
 /*jslint vars: true, unparam: true, nomen: true, white: true */
 /*global jQuery */
@@ -249,13 +249,19 @@ $.extend(tw.Tiddler.prototype, {
 	parse: function(data) {
 		var tiddler = new tw.Tiddler(this.title),
 			container = this.bag || this.recipe;
-		tiddler.bag = new tw.Bag(data.bag, container.host);
-		delete data.bag;
+		if(data.bag) {
+			tiddler.bag = new tw.Bag(data.bag, container.host);
+			delete data.bag;
+		}
 		delete data.recipe;
-		tiddler.created = convertTimestamp(data.created);
-		delete data.created;
-		tiddler.modified = convertTimestamp(data.modified);
-		delete data.modified;
+		if(tiddler.created) {
+			tiddler.created = convertTimestamp(data.created);
+			delete data.created;
+		}
+		if(tiddler.modified) {
+			tiddler.modified = convertTimestamp(data.modified);
+			delete data.modified;
+		}
 		if(this.recipe) {
 			tiddler.recipe = this.recipe;
 		}
