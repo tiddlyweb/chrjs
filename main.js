@@ -1,5 +1,5 @@
 // TiddlyWeb adaptor
-// v0.13.0
+// v0.14.0
 
 /*jslint vars: true, unparam: true, nomen: true */
 /*global jQuery */
@@ -72,7 +72,7 @@ $.extend(tw.Resource.prototype, {
 			url: uri,
 			type: "PUT",
 			contentType: "application/json",
-			data: this.toJSON(),
+			data: JSON.stringify(this.baseData()),
 			success: function(data, status, xhr) {
 				callback(self, status, xhr);
 			},
@@ -106,8 +106,8 @@ $.extend(tw.Resource.prototype, {
 		}
 		return $.ajax(options);
 	},
-	// returns the JSON representation of a resource
-	toJSON: function() {
+	// returns an object carrying only the essential information of the resource
+	baseData: function() {
 		var data = {},
 			self = this;
 		$.each(this.data, function(i, item) {
@@ -116,9 +116,9 @@ $.extend(tw.Resource.prototype, {
 				data[item] = value;
 			}
 		});
-		return JSON.stringify(data);
+		return data;
 	},
-	// returns corresponding instance from raw JSON object (if applicable)
+	// returns corresponding instance from a raw object (if applicable)
 	parse: function(data) {
 		return data;
 	},
@@ -247,26 +247,6 @@ $.extend(tw.Tiddler.prototype, {
 			name: container ? container.name : null
 		});
 		return supplant(tw.routes[this._type], params);
-	},
-	toJSON: function() { // XXX: largely duplicates parent's toJSON
-		var data = { title: this.title },
-			self = this;
-		$.each(this.data, function(i, item) {
-			var value = self[item];
-			if(value !== undefined) {
-				data[item] = value;
-			}
-		});
-		$.each(["bag", "recipe"], function(i, type) {
-			var container = self[type];
-			if(container) {
-				data[type] = {
-					name: container.name,
-					host: container.host
-				};
-			}
-		});
-		return JSON.stringify(data);
 	},
 	parse: function(data) {
 		var tiddler = new tw.Tiddler(this.title),
