@@ -339,15 +339,19 @@ tw._capitalize = function(str) {
 
 // convert YYYYMMDDhhmmss timestamp to Date instance
 convertTimestamp = function(t) {
-	return new Date(Date.UTC(
-		parseInt(t.substr(0, 4), 10),
-		parseInt(t.substr(4, 2), 10) - 1,
-		parseInt(t.substr(6, 2), 10),
-		parseInt(t.substr(8, 2), 10),
-		parseInt(t.substr(10, 2), 10),
-		parseInt(t.substr(12, 2) || "0", 10),
-		parseInt(t.substr(14, 3) || "0", 10)
-	));
+	if (t.match(/^\d{12,17}$/)) {
+		return new Date(Date.UTC(
+			parseInt(t.substr(0, 4), 10),
+			parseInt(t.substr(4, 2), 10) - 1,
+			parseInt(t.substr(6, 2), 10),
+			parseInt(t.substr(8, 2), 10),
+			parseInt(t.substr(10, 2), 10),
+			parseInt(t.substr(12, 2) || "0", 10),
+			parseInt(t.substr(14, 3) || "0", 10)
+		));
+	} else {
+		return new Date(Date.parse(t));
+	}
 };
 
 // adapted from Crockford (http://javascript.crockford.com/remedial.html)
