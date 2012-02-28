@@ -9,3 +9,8 @@ Licensed under the same terms as TiddlyWeb itself (BSD).
 Dependencies:
 * jQuery (http://jquery.com)
 * json2 (https://github.com/douglascrockford/JSON-js) for legacy browsers
+
+Known Bugs:
+* The tiddler object passed to the tiddler.put() success callback will have
+  an incorrect revision identifier: The id of the previous revision. See:
+  https://github.com/tiddlyweb/chrjs/issues/9
